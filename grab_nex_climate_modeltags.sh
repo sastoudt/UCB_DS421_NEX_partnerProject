@@ -5,6 +5,8 @@
 # all that's left is the model names
 # remove duplicates; keep only one copy of each model name in list
 
+# you can run this script and pipe list into a file with 'bash grab_nex_climate_modeltags.sh | tee file.txt'
+
 grep '^mkdir' make_directories_files.sh | grep '/historical/' | sed -e 's:^.*/historical/::' | sed -e 's:/pr/.*::' | sed -e 's:/tasmin/.*::' | sed -e 's:/tasmax/.*::' | uniq
 
 
