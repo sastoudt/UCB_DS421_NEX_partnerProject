@@ -7,14 +7,14 @@ yourPathToData="/Volumes/Seagate_Expansion_5TB_jtb/NASA/climate/rawdata/"
 
 setwd("~/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/")
 
-tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F) ## get tags for different models
+tagList<-read.csv("tagList.csv",stringsAsFactors=F,header=F) ## get tagList for different models
 
 nex_climate_filenames <- read.table("nex_climate_filenames.txt", 
                                     quote="\"", comment.char="") ## get all file names
 
-filesPerTags=vector("list",length(tags))
-for(i in 1:length(tags)){
-  filesPerTags[[i]]=nex_climate_filenames[grepl(tags[i,1],nex_climate_filenames[,1]),1]
+filesPertagList=vector("list",length(tagList))
+for(i in 1:length(tagList)){
+  filesPertagList[[i]]=nex_climate_filenames[grepl(tagList[i,1],nex_climate_filenames[,1]),1]
 } ## get files per tag
 
 
@@ -22,14 +22,14 @@ for(i in 1:length(tags)){
 #lat <- ncvar_get(ncin,"lat") ## should only have to do for one file, same across files
 
 
-## since looping over tags, can easily run the code for only our half
+## since looping over tagList, can easily run the code for only our half
 for(i in 1:length(tagList)){
 
 ## split by type of data
  
-prFileNames=filesPerTags[[i]][grepl("pr_",filesPerTags[[i]])]
-tempMinFileNames=filesPerTags[[i]][grepl("tasmin_",filesPerTags[[i]])]
-tempMaxFileNames=filesPerTags[[i]][grepl("tasmax_",filesPerTags[[i]])]
+prFileNames=filesPertagList[[i]][grepl("pr_",filesPertagList[[i]])]
+tempMinFileNames=filesPertagList[[i]][grepl("tasmin_",filesPertagList[[i]])]
+tempMaxFileNames=filesPertagList[[i]][grepl("tasmax_",filesPertagList[[i]])]
 
 ## split by historical, rcp45, rcp85
 
