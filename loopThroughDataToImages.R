@@ -1,3 +1,8 @@
+require(RColorBrewer)
+require(maps)
+require(ncdf4)
+require(RSvgDevice)
+
 yourPathToData=""
 
 setwd("~/Desktop/UCB_DS421_NEX_partnerProject")
@@ -40,7 +45,11 @@ tempMaxFileNames_hist=tempMaxFileNames[grepl("historical",tempMaxFileNames)]
 tempMaxFileNames_rcp45=tempMaxFileNames[grepl("rcp45",tempMaxFileNames)]
 tempMaxFileNames_rcp85=tempMaxFileNames[grepl("rcp85",tempMaxFileNames)]
 
-
+## still need uniform color breaks
+## breaks=breaksAll
+## col=colAll
+## lat 
+## lon
 for(j in 1:length(prFileNames_hist)){
   ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i],"/pr/",prFileNames_hist[j],sep="")
   
@@ -53,8 +62,13 @@ for(j in 1:length(prFileNames_hist)){
     oneDay=precipHist[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/historical",tagList[i],"/pr/",prFileNames_hist[j],sep="")
-    imgName=paste(prFileNames_hist[j],"day",k,".fileType",sep="")
+    imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+    setwd(toSavePath)
     ## make image
+    devSVG(file=imgName,width=10,height=8)
+    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll)
+    map("world",add=T) ## should try to print year and day on this somewhere + key
+    dev.off()
   }
 }
 
@@ -71,7 +85,13 @@ for(j in 1:length(prFileNames_rcp45)){
     oneDay=precip45[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i],"/pr/",prFileNames_rcp45[j],sep="")
-    imgName=paste(prFileNames_rcp45[j],"day",k,".fileType",sep="")
+    imgName=paste(prFileNames_rcp45[j],"day",k,".svg",sep="")
+    setwd(toSavePath)
+    ## make image
+    devSVG(file=imgName,width=10,height=8)
+    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll)
+    map("world",add=T) ## should try to print year and day on this somewhere + key
+    dev.off()
   }
   
 }
@@ -86,7 +106,14 @@ for(j in 1:length(prFileNames_rcp85)){
     oneDay=precip85[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i],"/pr/",prFileNames_rcp85[j],sep="")
-    imgName=paste(prFileNames_rcp85[j],"day",k,".fileType",sep="")
+    imgName=paste(prFileNames_rcp85[j],"day",k,".svg",sep="")
+    setwd(toSavePath)
+    ## make image
+    devSVG(file=imgName,width=10,height=8)
+    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll)
+    map("world",add=T) ## should try to print year and day on this somewhere + key
+    dev.off()
+    
   }
 }
 
@@ -101,7 +128,13 @@ for(j in 1:length(tempMinFileNames_hist)){
     oneDay=tempMinHist[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/historical/",tagList[i],"/tasmin/",tempMinFileNames_hist[j],sep="")
-    imgName=paste(tempMinFileNames_hist[j],"day",k,".fileType",sep="")
+    imgName=paste(tempMinFileNames_hist[j],"day",k,".svg",sep="")
+    setwd(toSavePath)
+    ## make image
+    devSVG(file=imgName,width=10,height=8)
+    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll)
+    map("world",add=T) ## should try to print year and day on this somewhere + key
+    dev.off()
     
   }
 }
@@ -117,7 +150,13 @@ for(j in 1:length(tempMinFileNames_rcp45)){
     oneDay=tempMin45[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i],"/tasmin/",tempMinFileNames_rcp45[j],sep="")
-    imgName=paste(tempMinFileNames_rcp45[j],"day",k,".fileType",sep="")
+    imgName=paste(tempMinFileNames_rcp45[j],"day",k,".svg",sep="")
+    setwd(toSavePath)
+    ## make image
+    devSVG(file=imgName,width=10,height=8)
+    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll)
+    map("world",add=T) ## should try to print year and day on this somewhere + key
+    dev.off()
   }
 }
 
@@ -131,7 +170,13 @@ for(j in 1:length(tempMinFileNames_rcp85)){
     oneDay=tempMin85[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i],"/tasmin/",tempMinFileNames_rcp85[j],sep="")
-    imgName=paste(tempMinFileNames_rcp85[j],"day",k,".fileType",sep="")
+    imgName=paste(tempMinFileNames_rcp85[j],"day",k,".svg",sep="")
+    setwd(toSavePath)
+    ## make image
+    devSVG(file=imgName,width=10,height=8)
+    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll)
+    map("world",add=T) ## should try to print year and day on this somewhere + key
+    dev.off()
   }
 }
 
@@ -145,7 +190,13 @@ for(j in 1:length(tempMaxFileNames_hist)){
     oneDay=tempMaxHist[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/historical/",tagList[i],"/tasmax/",tempMaxFileNames_hist[j],sep="")
-    imgName=paste(tempMaxFileNames_hist[j],"day",k,".fileType",sep="")
+    imgName=paste(tempMaxFileNames_hist[j],"day",k,".svg",sep="")
+    setwd(toSavePath)
+    ## make image
+    devSVG(file=imgName,width=10,height=8)
+    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll)
+    map("world",add=T) ## should try to print year and day on this somewhere + key
+    dev.off()
   }
 }
 
@@ -159,7 +210,13 @@ for(j in 1:length(tempMaxFileNames_rcp45)){
     oneDay=tempMax45[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i],"/tasmax/",tempMaxFileNames_rcp45[j],sep="")
-    imgName=paste(tempMaxFileNames_rcp45[j],"day",k,".fileType",sep="")
+    imgName=paste(tempMaxFileNames_rcp45[j],"day",k,".svg",sep="")
+    setwd(toSavePath)
+    ## make image
+    devSVG(file=imgName,width=10,height=8)
+    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll)
+    map("world",add=T) ## should try to print year and day on this somewhere + key
+    dev.off()
     
   }
 }
@@ -174,7 +231,13 @@ for(j in 1:length(tempMaxFileNames_rcp85)){
     oneDay=tempMax85[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i],"/tasmax/",tempMaxFileNames_rcp85[j],sep="")
-    imgName=paste(tempMaxFileNames_rcp85[j],"day",k,".fileType",sep="")
+    imgName=paste(tempMaxFileNames_rcp85[j],"day",k,".svg",sep="")
+    setwd(toSavePath)
+    ## make image
+    devSVG(file=imgName,width=10,height=8)
+    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll)
+    map("world",add=T) ## should try to print year and day on this somewhere + key
+    dev.off()
   }
 }
 
