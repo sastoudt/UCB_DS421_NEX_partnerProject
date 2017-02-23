@@ -3,13 +3,13 @@ require(maps)
 require(ncdf4)
 require(RSvgDevice)
 
-yourPathToData=""
+yourPathToData="/Volumes/Seagate_Expansion_5TB_jtb/NASA/climate/rawdata/"
 
-setwd("~/Desktop/UCB_DS421_NEX_partnerProject")
+setwd("~/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/")
 
-tags<-read.csv("tags.csv",stringsAsFactors=F,header=F) ## get tags for different models
+tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F) ## get tags for different models
 
-nex_climate_filenames <- read.table("~/Desktop/UCB_DS421_NEX_partnerProject/nex_climate_filenames.txt", 
+nex_climate_filenames <- read.table("nex_climate_filenames.txt", 
                                     quote="\"", comment.char="") ## get all file names
 
 filesPerTags=vector("list",length(tags))
