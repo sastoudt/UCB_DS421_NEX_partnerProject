@@ -61,7 +61,7 @@ for(j in 1:length(prFileNames_hist)){
   for(k in 1:(dim(precipHist)[3])){
     oneDay=precipHist[,,k]
     ## make and save image
-    toSavePath=paste(yourPathToData,"/images/historical",tagList[i,1],"/pr/",prFileNames_hist[j],sep="")
+    toSavePath=paste(yourPathToData,"/images/historical",tagList[i,1],"/pr/",sep="")
     imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
@@ -85,7 +85,7 @@ for(j in 1:length(prFileNames_rcp45)){
   for(k in 1:(dim(precip45)[3])){
     oneDay=precip45[,,k]
     ## make and save image
-    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/pr/",prFileNames_rcp45[j],sep="")
+    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/pr/",sep="")
     imgName=paste(prFileNames_rcp45[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
@@ -107,7 +107,7 @@ for(j in 1:length(prFileNames_rcp85)){
   for(k in 1:(dim(precip85)[3])){
     oneDay=precip85[,,k]
     ## make and save image
-    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/pr/",prFileNames_rcp85[j],sep="")
+    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/pr/",sep="")
     imgName=paste(prFileNames_rcp85[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
@@ -130,7 +130,7 @@ for(j in 1:length(tempMinFileNames_hist)){
   for(k in 1:(dim(tempMinHist)[3])){
     oneDay=tempMinHist[,,k]
     ## make and save image
-    toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",tempMinFileNames_hist[j],sep="")
+    toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
     imgName=paste(tempMinFileNames_hist[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
@@ -153,7 +153,7 @@ for(j in 1:length(tempMinFileNames_rcp45)){
   for(k in 1:(dim(tempMin45)[3])){
     oneDay=tempMin45[,,k]
     ## make and save image
-    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmin/",tempMinFileNames_rcp45[j],sep="")
+    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmin/",sep="")
     imgName=paste(tempMinFileNames_rcp45[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
@@ -174,7 +174,7 @@ for(j in 1:length(tempMinFileNames_rcp85)){
   for(k in 1:(dim(tempMin85)[3])){
     oneDay=tempMin85[,,k]
     ## make and save image
-    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmin/",tempMinFileNames_rcp85[j],sep="")
+    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmin/",sep="")
     imgName=paste(tempMinFileNames_rcp85[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
@@ -195,7 +195,7 @@ for(j in 1:length(tempMaxFileNames_hist)){
   for(k in 1:(dim(tempMaxHist)[3])){
     oneDay=tempMaxHist[,,k]
     ## make and save image
-    toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",tempMaxFileNames_hist[j],sep="")
+    toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
     imgName=paste(tempMaxFileNames_hist[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
@@ -216,7 +216,7 @@ for(j in 1:length(tempMaxFileNames_rcp45)){
   for(k in 1:(dim(tempMax45)[3])){
     oneDay=tempMax45[,,k]
     ## make and save image
-    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp45[j],sep="")
+    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmax/",sep="")
     imgName=paste(tempMaxFileNames_rcp45[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
@@ -238,7 +238,7 @@ for(j in 1:length(tempMaxFileNames_rcp85)){
   for(k in 1:(dim(tempMax85)[3])){
     oneDay=tempMax85[,,k]
     ## make and save image
-    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp85[j],sep="")
+    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmax/",sep="")
     imgName=paste(tempMaxFileNames_rcp85[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
