@@ -87,7 +87,7 @@ for(j in 1:length(prFileNames_hist)){
   for(k in 1:(dim(precipHist)[3])){
     oneDay=precipHist[,,k]
     ## make and save image
-    toSavePath=paste(yourPathToData,"/images/historical",tagList[i,1],"/pr/",sep="")
+    toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep="")
     imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
