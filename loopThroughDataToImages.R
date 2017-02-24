@@ -3,7 +3,7 @@ library(maps)
 library(ncdf4)
 library(RSvgDevice)
 
-yourPathToData="/Volumes/Seagate_Expansion_5TB_jtb/NASA/climate/rawdata/"
+yourPathToData="/Volumes/Seagate_Expansion_5TB_jtb/NASA/climate"
 
 setwd("~/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/")
 
