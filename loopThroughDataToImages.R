@@ -20,7 +20,10 @@ for(i in 1:length(tagList)){
 
 #lon <- ncvar_get(ncin,"lon") ## should only have to do for one file, same across files
 #lat <- ncvar_get(ncin,"lat") ## should only have to do for one file, same across files
+## pick any file, grab these, and write to csv
 
+lon=read.csv("lon.csv",stringsAsFactors=F)[,1]
+lat=read.csv("lat.csv",stringsAsFactors=F)[,1]
 
 ## since looping over tagList, can easily run the code for only our half
 for(i in 1:length(tagList)){
