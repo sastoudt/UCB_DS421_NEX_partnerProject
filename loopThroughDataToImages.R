@@ -49,10 +49,33 @@ tempMaxFileNames_rcp45=tempMaxFileNames[grepl("rcp45",tempMaxFileNames)]
 tempMaxFileNames_rcp85=tempMaxFileNames[grepl("rcp85",tempMaxFileNames)]
 
 ## still need uniform color breaks
-## breaks=breaksAll
-## col=colAll
-## lat 
-## lon
+
+
+## just take January 1 from 3 different files do quantile
+#pr_day_BCSD_historical_r1i1p1_ACCESS1-0_1950
+#tasmax_day_BCSD_historical_r1i1p1_ACCESS1-0_1967.nc
+#tasmin_day_BCSD_historical_r1i1p1_GFDL-ESM2M_1950.nc
+
+## in reality need to open and loop through all the data to get appropriate cutpoints, but just as proof of concept
+## will probably need a transform to show variation, etc.
+## non trivial choices, but I'll work on some ideas on how best to make the cuts to minimize how much data
+## we go through before hand
+
+
+breaksAllPr=c(1.211651e-07, 3.037936e-06, 8.454731e-06, 1.965769e-05, 4.818611e-05 ) ## quantile(c(oneDay),seq(0,1,by=.1))[6:10]
+breaksAllMinTemp=c(213.6561, 264.8782, 274.5075, 288.1346, 303.0206 ) ## quantile(c(oneDay),seq(0,1,by=.25),na.rm=T)[1:5]
+breaksAllMaxTemp=c(218.4304,267.1825, 277.3592, 289.0492, 320.6029) ## quantile(c(oneDay),seq(0,1,by=.25))[1:5]
+
+## need one more break than color
+
+colAllPr=brewer.pal(4,"Blues")
+colAllMinTemp=rev(brewer.pal(4,"Purples")) ## deeper purple means colder
+colAllMaxTemp=brewer.pal(4,"YlOrRd")
+## might want more than 4 breakpoints, just a proof of concept here
+
+## might need to further break down by historical, rcp45, rcp85
+
+
 for(j in 1:length(prFileNames_hist)){
   ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/",prFileNames_hist[j],sep="")
   
@@ -70,7 +93,7 @@ for(j in 1:length(prFileNames_hist)){
     ## make image
     year=substr(prFileNames_hist[j],nchar(as.character(prFileNames_hist[j]))-11,nchar(as.character(prFileNames_hist[j]))-8)
     devSVG(file=imgName,width=10,height=8)
-    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll,sub=paste("historical ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
+    test=image(lon-180, lat, oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("historical ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ## + key
     dev.off()
   }
@@ -94,7 +117,7 @@ for(j in 1:length(prFileNames_rcp45)){
     ## make image
     year=substr(prFileNames_rcp45[j],nchar(as.character(prFileNames_rcp45[j]))-11,nchar(as.character(prFileNames_rcp45[j]))-8)
     devSVG(file=imgName,width=10,height=8)
-    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll,sub=paste("rcp45 ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
+    test=image(lon-180, lat, oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("rcp45 ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
   }
@@ -116,7 +139,7 @@ for(j in 1:length(prFileNames_rcp85)){
     ## make image
     year=substr(prFileNames_rcp85[j],nchar(as.character(prFileNames_rcp85[j]))-11,nchar(as.character(prFileNames_rcp85[j]))-8)
     devSVG(file=imgName,width=10,height=8)
-    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll,sub=paste("rcp85 ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
+    test=image(lon-180, lat, oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("rcp85 ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
     
@@ -139,7 +162,7 @@ for(j in 1:length(tempMinFileNames_hist)){
     ## make image
     year=substr(tempMinFileNames_hist[j],nchar(as.character(tempMinFileNames_hist[j]))-11,nchar(as.character(tempMinFileNames_hist[j]))-8)
     devSVG(file=imgName,width=10,height=8)
-    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll,sub=paste("historical ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
+    test=image(lon-180, lat, oneDay,breaks=breaksAllMinTemp,col=colAllMinTemp,sub=paste("historical ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
     
@@ -162,7 +185,7 @@ for(j in 1:length(tempMinFileNames_rcp45)){
     ## make image
     year=substr(tempMinFileNames_rcp45[j],nchar(as.character(tempMinFileNames_rcp45[j]))-11,nchar(as.character(tempMinFileNames_rcp45[j]))-8)
     devSVG(file=imgName,width=10,height=8)
-    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll,sub=paste("rcp45 ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
+    test=image(lon-180, lat, oneDay,breaks=breaksAllMinTemp,col=colAllMinTemp,sub=paste("rcp45 ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
   }
@@ -183,7 +206,7 @@ for(j in 1:length(tempMinFileNames_rcp85)){
     ## make image
     year=substr(tempMinFileNames_rcp85[j],nchar(as.character(tempMinFileNames_rcp85[j]))-11,nchar(as.character(tempMinFileNames_rcp85[j]))-8)
     devSVG(file=imgName,width=10,height=8)
-    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll,sub=paste("rcp85 ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
+    test=image(lon-180, lat, oneDay,breaks=breaksAllMinTemp,col=colAllMinTemp,sub=paste("rcp85 ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
   }
@@ -204,7 +227,7 @@ for(j in 1:length(tempMaxFileNames_hist)){
     ## make image
     year=substr(tempMaxFileNames_hist[j],nchar(as.character(tempMaxFileNames_hist[j]))-11,nchar(as.character(tempMaxFileNames_hist[j]))-8)
     devSVG(file=imgName,width=10,height=8)
-    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll,sub=paste("historical ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
+    test=image(lon-180, lat, oneDay,breaks=breaksAllMaxTemp,col=colAllMaxTemp,sub=paste("historical ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
   }
@@ -225,7 +248,7 @@ for(j in 1:length(tempMaxFileNames_rcp45)){
     ## make image
     year=substr(tempMaxFileNames_rcp45[j],nchar(as.character(tempMaxFileNames_rcp45[j]))-11,nchar(as.character(tempMaxFileNames_rcp45[j]))-8)
     devSVG(file=imgName,width=10,height=8)
-    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll,sub=paste("rcp45 ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
+    test=image(lon-180, lat, oneDay,breaks=breaksAllMaxTemp,col=colAllMaxTemp,sub=paste("rcp45 ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
     
@@ -247,7 +270,7 @@ for(j in 1:length(tempMaxFileNames_rcp85)){
     ## make image
     year=substr(tempMaxFileNames_rcp85[j],nchar(as.character(tempMaxFileNames_rcp85[j]))-11,nchar(as.character(tempMaxFileNames_rcp85[j]))-8)
     devSVG(file=imgName,width=10,height=8)
-    test=image(lon-180, lat, oneDay,breaks=breaksAll,col=colAll,sub=paste("rcp85 ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
+    test=image(lon-180, lat, oneDay,breaks=breaksAllMaxTemp,col=colAllMaxTemp,sub=paste("rcp85 ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
   }
