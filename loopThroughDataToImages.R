@@ -1,13 +1,13 @@
-require(RColorBrewer)
-require(maps)
-require(ncdf4)
-require(RSvgDevice)
+library(RColorBrewer)
+library(maps)
+library(ncdf4)
+library(RSvgDevice)
 
 yourPathToData="/Volumes/Seagate_Expansion_5TB_jtb/NASA/climate/rawdata/"
 
 setwd("~/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/")
 
-tagList<-read.csv("tagList.csv",stringsAsFactors=F,header=F) ## get tagList for different models
+tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F) ## get tagList for different models
 
 nex_climate_filenames <- read.table("nex_climate_filenames.txt", 
                                     quote="\"", comment.char="") ## get all file names
