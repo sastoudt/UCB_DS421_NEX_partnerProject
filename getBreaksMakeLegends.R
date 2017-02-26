@@ -16,11 +16,15 @@ nex_climate_filenames <- read.table("nex_climate_filenames.txt",
                                     quote="\"", comment.char="") ## get all file names
 
 filesPertagList=vector("list",length(tagList))
-for(i in 1:length(tagList)){
+for(i in 1:nrow(tagList)){
   filesPertagList[[i]]=nex_climate_filenames[grepl(tagList[i,1],nex_climate_filenames[,1]),1]
 } ## get files per tag
 
-for(i in 1:length(tagList)){
+
+
+prHistBreak=pr45Break=pr85Break=minTempHistBreak=minTemp45Break=minTemp85Break=
+  maxTempHistBreak=maxTemp45Break=maxTemp85Break=matrix(0,nrow=length(tagList),ncol=11)
+for(i in 1:nrow(tagList)){
   
   ## split by type of data
   
@@ -65,7 +69,7 @@ for(i in 1:length(tagList)){
   test=apply(precipHist,c(1,2),mean)
   quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
   }
-  prHistBreak=apply(quants,2,mean)
+  prHistBreak[i,]=apply(quants,2,mean)
   
   quants<-c()
   for(k in 1:length(subSampPr45)){
@@ -77,7 +81,7 @@ for(i in 1:length(tagList)){
   test=apply(precip45,c(1,2),mean)
   quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
   }
-  pr45Break=apply(quants,2,mean)
+  pr45Break[i,]=apply(quants,2,mean)
   
   quants<-c()
   for(k in 1:length(subSampPr85)){
@@ -89,7 +93,7 @@ for(i in 1:length(tagList)){
   test=apply(precip85,c(1,2),mean)
   quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
   }
-  pr85Break=apply(quants,2,mean)
+  pr85Break[i,]=apply(quants,2,mean)
   
   ##
   
@@ -103,7 +107,7 @@ for(i in 1:length(tagList)){
   test=apply(tempMinHist,c(1,2),mean)
   quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
   }
-  minTempHistBreak=apply(quants,2,mean)
+  minTempHistBreak[i,]=apply(quants,2,mean)
   
   quants<-c()
   for(k in 1:length(subSampMinTemp45)){
@@ -115,7 +119,7 @@ for(i in 1:length(tagList)){
   test=apply(tempMin45,c(1,2),mean)
   quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
   }
-  minTemp45Break=apply(quants,2,mean)
+  minTemp45Break[i,]=apply(quants,2,mean)
   
   quants<-c()
   for(k in 1:length(subSampMinTemp85)){
@@ -127,7 +131,7 @@ for(i in 1:length(tagList)){
   test=apply(tempMin85,c(1,2),mean)
   quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
   }
-  minTemp85Break=apply(quants,2,mean)
+  minTemp85Break[i,]=apply(quants,2,mean)
   ##
   
   quants<-c()
@@ -141,7 +145,7 @@ for(i in 1:length(tagList)){
   quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
   
   }
-  maxTempHistBreak=apply(quants,2,mean)
+  maxTempHistBreak[i,]=apply(quants,2,mean)
   
   
   quants<-c()
@@ -154,7 +158,7 @@ for(i in 1:length(tagList)){
   test=apply(tempMax45,c(1,2),mean)
   quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
   }
-  maxTemp45Break=apply(quants,2,mean)
+  maxTemp45Break[i,]=apply(quants,2,mean)
   
   quants<-c()
   for(k in 1:length(subSampMaxTemp85)){
@@ -166,7 +170,7 @@ for(i in 1:length(tagList)){
   test=apply(tempMax85,c(1,2),mean)
   quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
   }
-  maxTemp85Break=apply(quants,2,mean)
+  maxTemp85Break[i,]=apply(quants,2,mean)
 }
 
 gitHubWD=""
