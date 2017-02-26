@@ -271,8 +271,8 @@ for(i in 1:nrow(tagList)){
   
 }
 
-devSVG(file="test.svg",width=12,height=4)
-colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=0:10,at=0:10,x=0:10,digits=10,symmetric=F)
-dev.off()
-colAllPr=brewer.pal(4,"Blues")
+#devSVG(file="test.svg",width=12,height=4)
+#colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=0:10,at=0:10,x=0:10,digits=10,symmetric=F)
+#dev.off()
+
 
