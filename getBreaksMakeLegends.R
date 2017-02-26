@@ -1,4 +1,5 @@
 ## get breaks for images
+## see how these look, may need log transform for precip data
 
 ## https://www.biostars.org/p/73644/
 ## if values are more extreme than the break points we set, they are just truncated at the lower/upper color limit
@@ -189,3 +190,89 @@ write.csv(maxTemp45Break,"maxTemp45Break.csv",row.names=F)
 write.csv(maxTemp85Break,"maxTemp85Break.csv",row.names=F)
 
 ## make key
+
+require(RColorBrewer)
+require(R2BayesX)
+library(RSvgDevice)
+
+for(i in 1:nrow(tagList)){
+  toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_prHistLegend.svg",sep="")
+  toPlot=prHistBreak[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/pr/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_pr45Legend.svg",sep="")
+  toPlot=pr45Break[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/pr/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_pr85Legend.svg",sep="")
+  toPlot=pr85Break[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_minTempHistLegend.svg",sep="")
+  toPlot=minTempHistBreak[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmin/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_minTemp45Legend.svg",sep="")
+  toPlot=minTemp45Break[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmin/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_minTemp85Legend.svg",sep="")
+  toPlot=minTemp85Break[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_maxTempHistLegend.svg",sep="")
+  toPlot=maxTempHistBreak[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmax/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_maxTemp45Legend.svg",sep="")
+  toPlot=maxTemp45Break[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmax/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_maxTemp85Legend.svg",sep="")
+  toPlot=maxTemp85Break[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  
+}
+
+devSVG(file="test.svg",width=12,height=4)
+colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=0:10,at=0:10,x=0:10,digits=10,symmetric=F)
+dev.off()
+colAllPr=brewer.pal(4,"Blues")
+
