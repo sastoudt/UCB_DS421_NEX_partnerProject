@@ -49,3 +49,293 @@ library(jsonlite)
 write_json(lonLatGridPlusValue,"test.json")
 #write_json(x,"test.json")
 
+miniSub=lonLatGridPlusValue[1000:1100,]
+write_json(miniSub,"testMini.json")
+
+
+##http://bl.ocks.org/Jverma/887877fc5c2c2d99be10 
+## this example works
+
+##https://bl.ocks.org/mbostock/raw/4090846/world-50m.json
+##https://bl.ocks.org/mbostock/3757119
+##http://stackoverflow.com/questions/20987535/plotting-points-on-a-map-with-d3
+
+## put one point on map
+## http://bl.ocks.org/phil-pedruco/7745589
+## works
+
+### To ask Proxima
+
+## read data and plot points
+## how to colorcode the points by a z variable
+
+## globe in D3 version 4?
+
+## try to get image slider working
+
+
+
+###### Aggregation  ####
+
+## take mean per year for everything, save as json
+## definitely want subset
+## further aggregation across years?
+
+library(jsonlite)
+library(ncdf4)
+
+
+yourPathToData=""
+wdGit="~/Desktop/UCB_DS421_NEX_partnerProject"
+setwd(wdGit)
+
+tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F) ## get tagList for different models
+
+nex_climate_filenames <- read.table("nex_climate_filenames.txt", 
+                                    quote="\"", comment.char="") ## get all file names
+
+filesPertagList=vector("list",length(tagList))
+for(i in 1:nrow(tagList)){
+  filesPertagList[[i]]=nex_climate_filenames[grepl(tagList[i,1],nex_climate_filenames[,1]),1]
+} ## get files per tag
+
+
+#lon <- ncvar_get(ncin,"lon") ## should only have to do for one file, same across files
+#lat <- ncvar_get(ncin,"lat") ## should only have to do for one file, same across files
+## pick any file, grab these, and write to csv
+
+lon=read.csv("lon.csv",stringsAsFactors=F)[,1]
+lat=read.csv("lat.csv",stringsAsFactors=F)[,1]
+
+## since looping over tagList, can easily run the code for only our half
+for(i in 1:nrow(tagList)){
+  
+  ## split by type of data
+  
+  prFileNames=filesPertagList[[i]][grepl("pr_",filesPertagList[[i]])]
+  tempMinFileNames=filesPertagList[[i]][grepl("tasmin_",filesPertagList[[i]])]
+  tempMaxFileNames=filesPertagList[[i]][grepl("tasmax_",filesPertagList[[i]])]
+  
+  ## split by historical, rcp45, rcp85
+  
+  prFileNames_hist=prFileNames[grepl("historical",prFileNames)]
+  prFileNames_rcp45=prFileNames[grepl("rcp45",prFileNames)]
+  prFileNames_rcp85=prFileNames[grepl("rcp85",prFileNames)]
+  
+  tempMinNames_hist=tempMinFileNames[grepl("historical",tempMinFileNames)]
+  tempMinFileNames_rcp45=tempMinFileNames[grepl("rcp45",tempMinFileNames)]
+  tempMinFileNames_rcp85=tempMinFileNames[grepl("rcp85",tempMinFileNames)]
+  
+  tempMaxFileNames_hist=tempMaxFileNames[grepl("historical",tempMaxFileNames)]
+  tempMaxFileNames_rcp45=tempMaxFileNames[grepl("rcp45",tempMaxFileNames)]
+  tempMaxFileNames_rcp85=tempMaxFileNames[grepl("rcp85",tempMaxFileNames)]
+  
+
+
+for(j in 1:length(prFileNames_hist)){
+  ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/",prFileNames_hist[j],sep="")
+  
+  ncin <- nc_open(ncname)
+  
+  precipHist <- ncvar_get(ncin,"pr")
+  ## need to double check for tmax, tmin, see what they are called
+  nc_close(ncin)
+  
+ 
+  
+  
+
+    toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep="")
+    imgName=paste(prFileNames_hist[j],"_yearMean",".json",sep="")
+    setwd(toSavePath)
+    
+    oneDay=apply(precipHist,c(1,2),mean,na.rm=T)
+    
+    lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(oneDay)))
+    names(lonLatGridPlusValue)=c("lon","lat","pr")
+    lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
+    lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
+    lonLatGridPlusValue$pr=as.numeric(as.character(lonLatGridPlusValue$pr))
+    write_json(lonLatGridPlusValue,imgName)
+
+}
+
+for(j in 1:length(prFileNames_rcp45)){
+  ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/pr/",prFileNames_rcp45[j],sep="")
+  ncin <- nc_open(ncname)
+  precip45 <- ncvar_get(ncin,"pr")
+  nc_close(ncin)
+
+    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/pr/",sep="")
+    imgName=paste(prFileNames_rcp45[j],"_yearMean",".json",sep="")
+    setwd(toSavePath)
+
+    oneDay=apply(precip45,c(1,2),mean,na.rm=T)
+    
+    lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(oneDay)))
+    names(lonLatGridPlusValue)=c("lon","lat","pr")
+    lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
+    lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
+    lonLatGridPlusValue$pr=as.numeric(as.character(lonLatGridPlusValue$pr))
+    write_json(lonLatGridPlusValue,imgName)
+    
+  }
+  
+
+
+for(j in 1:length(prFileNames_rcp85)){
+  ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/pr/",prFileNames_rcp85[j],sep="")
+  ncin <- nc_open(ncname)
+  precip85 <- ncvar_get(ncin,"pr")
+  nc_close(ncin)
+  
+  
+    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/pr/",sep="")
+    imgName=paste(prFileNames_rcp85[j],"_yearMean",".json",sep="")
+    setwd(toSavePath)
+    ## make image
+    oneDay=apply(precip85,c(1,2),mean,na.rm=T)
+    
+    lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(oneDay)))
+    names(lonLatGridPlusValue)=c("lon","lat","pr")
+    lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
+    lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
+    lonLatGridPlusValue$pr=as.numeric(as.character(lonLatGridPlusValue$pr))
+    write_json(lonLatGridPlusValue,imgName)
+    
+  }
+
+
+for(j in 1:length(tempMinFileNames_hist)){
+  ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/",tempMinFileNames_hist[j],sep="")
+  ncin <- nc_open(ncname)
+  tempMinHist <- ncvar_get(ncin,"tasmin")
+
+  nc_close(ncin)
+
+    toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
+    imgName=paste(tempMinFileNames_hist[j],"yearMean",".json",sep="")
+    setwd(toSavePath)
+
+    oneDay=apply(tempMinHist,c(1,2),mean,na.rm=T)
+    
+    lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(oneDay)))
+    names(lonLatGridPlusValue)=c("lon","lat","tasmin")
+    lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
+    lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
+    lonLatGridPlusValue$tasmin=as.numeric(as.character(lonLatGridPlusValue$tasmin))
+    write_json(lonLatGridPlusValue,imgName)
+    
+  }
+
+
+for(j in 1:length(tempMinFileNames_rcp45)){
+  ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmin/",tempMinFileNames_rcp45[j],sep="")
+  ncin <- nc_open(ncname)
+  tempMin45 <- ncvar_get(ncin,"tasmin")
+  ## need to do for tmax, tmin, see what they are called
+  nc_close(ncin)
+  
+  
+    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmin/",sep="")
+    imgName=paste(tempMinFileNames_rcp45[j],"yearMean",".json",sep="")
+    setwd(toSavePath)
+    oneDay=apply(tempMin45,c(1,2),mean,na.rm=T)
+    
+    lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(oneDay)))
+    names(lonLatGridPlusValue)=c("lon","lat","tasmin")
+    lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
+    lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
+    lonLatGridPlusValue$tasmin=as.numeric(as.character(lonLatGridPlusValue$tasmin))
+    write_json(lonLatGridPlusValue,imgName)
+  }
+
+
+for(j in 1:length(tempMinFileNames_rcp85)){
+  ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmin/",tempMinFileNames_rcp85[j],sep="")
+  ncin <- nc_open(ncname)
+  tempMin85 <- ncvar_get(ncin,"tasmin")
+  nc_close(ncin)
+  
+  
+    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmin/",sep="")
+    imgName=paste(tempMinFileNames_rcp85[j],"yearMean",".json",sep="")
+    setwd(toSavePath)
+    oneDay=apply(tempMin85,c(1,2),mean,na.rm=T)
+    
+    lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(oneDay)))
+    names(lonLatGridPlusValue)=c("lon","lat","tasmin")
+    lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
+    lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
+    lonLatGridPlusValue$tasmin=as.numeric(as.character(lonLatGridPlusValue$tasmin))
+    write_json(lonLatGridPlusValue,imgName)
+  }
+
+
+for(j in 1:length(tempMaxFileNames_hist)){
+  ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/",tempMaxFileNames_hist[j],sep="")
+  ncin <- nc_open(ncname)
+  tempMaxHist <- ncvar_get(ncin,"tasmax")
+  ## need to do for tmax, tmin, see what they are called
+  nc_close(ncin)
+  
+    toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
+    imgName=paste(tempMaxFileNames_hist[j],"yearMean",".json",sep="")
+    setwd(toSavePath)
+    ## make image
+    oneDay=apply(tempMaxHist,c(1,2),mean,na.rm=T)
+    
+    lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(oneDay)))
+    names(lonLatGridPlusValue)=c("lon","lat","tasmax")
+    lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
+    lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
+    lonLatGridPlusValue$tasmax=as.numeric(as.character(lonLatGridPlusValue$tasmax))
+    write_json(lonLatGridPlusValue,imgName)
+  }
+
+
+for(j in 1:length(tempMaxFileNames_rcp45)){
+  ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp45[j],sep="")
+  ncin <- nc_open(ncname)
+  tempMax45 <- ncvar_get(ncin,"tasmax")
+  ## need to do for tmax, tmin, see what they are called
+  nc_close(ncin)
+  
+    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmax/",sep="")
+    imgName=paste(tempMaxFileNames_rcp45[j],"yearMean",".json",sep="")
+    setwd(toSavePath)
+    oneDay=apply(tempMax45,c(1,2),mean,na.rm=T)
+    
+    lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(oneDay)))
+    names(lonLatGridPlusValue)=c("lon","lat","tasmax")
+    lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
+    lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
+    lonLatGridPlusValue$tasmax=as.numeric(as.character(lonLatGridPlusValue$tasmax))
+    write_json(lonLatGridPlusValue,imgName)
+    
+  }
+
+
+for(j in 1:length(tempMaxFileNames_rcp85)){
+  ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp85[j],sep="")
+  ncin <- nc_open(ncname)
+  tempMax85 <- ncvar_get(ncin,"tasmax")
+  ## need to do for tmax, tmin, see what they are called
+  nc_close(ncin)
+  
+    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmax/",sep="")
+    imgName=paste(tempMaxFileNames_rcp85[j],"yearMean",".json",sep="")
+    setwd(toSavePath)
+    oneDay=apply(tempMax85,c(1,2),mean,na.rm=T)
+    
+    lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(oneDay)))
+    names(lonLatGridPlusValue)=c("lon","lat","tasmax")
+    lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
+    lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
+    lonLatGridPlusValue$tasmax=as.numeric(as.character(lonLatGridPlusValue$tasmax))
+    write_json(lonLatGridPlusValue,imgName)
+}
+
+
+}
+
