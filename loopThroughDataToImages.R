@@ -25,28 +25,6 @@ for(i in 1:nrow(tagList)){
 lon=read.csv("lon.csv",stringsAsFactors=F)[,1]
 lat=read.csv("lat.csv",stringsAsFactors=F)[,1]
 
-## since looping over tagList, can easily run the code for only our half
-for(i in 1:nrow(tagList)){
-
-## split by type of data
- 
-prFileNames=filesPertagList[[i]][grepl("pr_",filesPertagList[[i]])]
-tempMinFileNames=filesPertagList[[i]][grepl("tasmin_",filesPertagList[[i]])]
-tempMaxFileNames=filesPertagList[[i]][grepl("tasmax_",filesPertagList[[i]])]
-
-## split by historical, rcp45, rcp85
-
-prFileNames_hist=prFileNames[grepl("historical",prFileNames)]
-prFileNames_rcp45=prFileNames[grepl("rcp45",prFileNames)]
-prFileNames_rcp85=prFileNames[grepl("rcp85",prFileNames)]
-
-tempMinNames_hist=tempMinFileNames[grepl("historical",tempMinFileNames)]
-tempMinFileNames_rcp45=tempMinFileNames[grepl("rcp45",tempMinFileNames)]
-tempMinFileNames_rcp85=tempMinFileNames[grepl("rcp85",tempMinFileNames)]
-
-tempMaxFileNames_hist=tempMaxFileNames[grepl("historical",tempMaxFileNames)]
-tempMaxFileNames_rcp45=tempMaxFileNames[grepl("rcp45",tempMaxFileNames)]
-tempMaxFileNames_rcp85=tempMaxFileNames[grepl("rcp85",tempMaxFileNames)]
 
 ## still need uniform color breaks
 
@@ -71,9 +49,54 @@ breaksAllMaxTemp=c(218.4304,267.1825, 277.3592, 289.0492, 320.6029) ## quantile(
 colAllPr=brewer.pal(4,"Blues")
 colAllMinTemp=rev(brewer.pal(4,"Purples")) ## deeper purple means colder
 colAllMaxTemp=brewer.pal(4,"YlOrRd")
+
+#colAllPr=c(brewer.pal(9,"Blues"),"black")
+#colAllMinTemp=c("black",rev(brewer.pal(9,"Purples")))
+#colAllMaxTemp=c(brewer.pal(9,"YlOrRd"),"black")
 ## might want more than 4 breakpoints, just a proof of concept here
 
 ## might need to further break down by historical, rcp45, rcp85
+
+### comment out for now until we actually have these
+# setwd("~/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/")
+# prHistBreak=read.csv("prHistBreak.csv",stringsAsFactors=F)
+# pr45Break=read.csv.csv("pr45Break.csv",stringsAsFactors=F)
+# pr85Break=read.csv("pr85Break.csv",stringsAsFactors=F)
+# 
+# minTempHistBreak=read.csv("minTempHistBreak.csv",stringsAsFactors=F)
+# minTemp45Break=read.csv("minTemp45Break.csv",stringsAsFactors=F)
+# minTemp85Break=read.csv("minTemp85Break.csv",stringsAsFactors=F)
+# 
+# maxTempHistBreak=read.csv("maxTempHistBreak.csv",stringsAsFactors=F)
+# maxTemp45Break=read.csv("maxTemp45Break.csv",stringsAsFactors=F)
+# maxTemp85Break=read.csv("maxTemp85Break.csv",stringsAsFactors=F)
+
+
+
+
+## since looping over tagList, can easily run the code for only our half
+for(i in 1:nrow(tagList)){
+
+## split by type of data
+ 
+prFileNames=filesPertagList[[i]][grepl("pr_",filesPertagList[[i]])]
+tempMinFileNames=filesPertagList[[i]][grepl("tasmin_",filesPertagList[[i]])]
+tempMaxFileNames=filesPertagList[[i]][grepl("tasmax_",filesPertagList[[i]])]
+
+## split by historical, rcp45, rcp85
+
+prFileNames_hist=prFileNames[grepl("historical",prFileNames)]
+prFileNames_rcp45=prFileNames[grepl("rcp45",prFileNames)]
+prFileNames_rcp85=prFileNames[grepl("rcp85",prFileNames)]
+
+tempMinNames_hist=tempMinFileNames[grepl("historical",tempMinFileNames)]
+tempMinFileNames_rcp45=tempMinFileNames[grepl("rcp45",tempMinFileNames)]
+tempMinFileNames_rcp85=tempMinFileNames[grepl("rcp85",tempMinFileNames)]
+
+tempMaxFileNames_hist=tempMaxFileNames[grepl("historical",tempMaxFileNames)]
+tempMaxFileNames_rcp45=tempMaxFileNames[grepl("rcp45",tempMaxFileNames)]
+tempMaxFileNames_rcp85=tempMaxFileNames[grepl("rcp85",tempMaxFileNames)]
+
 
 
 for(j in 1:length(prFileNames_hist)){
@@ -92,6 +115,7 @@ for(j in 1:length(prFileNames_hist)){
     setwd(toSavePath)
     ## make image
     year=substr(prFileNames_hist[j],nchar(as.character(prFileNames_hist[j]))-11,nchar(as.character(prFileNames_hist[j]))-8)
+    #breaksAllPr=prHistBreak[i,]
     devSVG(file=imgName,width=10,height=8)
     test=image(lon-180, lat, oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("historical ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ## + key
@@ -116,6 +140,7 @@ for(j in 1:length(prFileNames_rcp45)){
     setwd(toSavePath)
     ## make image
     year=substr(prFileNames_rcp45[j],nchar(as.character(prFileNames_rcp45[j]))-11,nchar(as.character(prFileNames_rcp45[j]))-8)
+    #breaksAllPr=pr45Break[i,]
     devSVG(file=imgName,width=10,height=8)
     test=image(lon-180, lat, oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("rcp45 ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
@@ -138,6 +163,7 @@ for(j in 1:length(prFileNames_rcp85)){
     setwd(toSavePath)
     ## make image
     year=substr(prFileNames_rcp85[j],nchar(as.character(prFileNames_rcp85[j]))-11,nchar(as.character(prFileNames_rcp85[j]))-8)
+    #breaksAllPr=pr85Break[i,]
     devSVG(file=imgName,width=10,height=8)
     test=image(lon-180, lat, oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("rcp85 ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
@@ -161,6 +187,7 @@ for(j in 1:length(tempMinFileNames_hist)){
     setwd(toSavePath)
     ## make image
     year=substr(tempMinFileNames_hist[j],nchar(as.character(tempMinFileNames_hist[j]))-11,nchar(as.character(tempMinFileNames_hist[j]))-8)
+    #breaksAllMinTemp=minTempHistBreak[i,]
     devSVG(file=imgName,width=10,height=8)
     test=image(lon-180, lat, oneDay,breaks=breaksAllMinTemp,col=colAllMinTemp,sub=paste("historical ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
@@ -184,6 +211,7 @@ for(j in 1:length(tempMinFileNames_rcp45)){
     setwd(toSavePath)
     ## make image
     year=substr(tempMinFileNames_rcp45[j],nchar(as.character(tempMinFileNames_rcp45[j]))-11,nchar(as.character(tempMinFileNames_rcp45[j]))-8)
+    #breaksAllMinTemp=minTemp45Break[i,]
     devSVG(file=imgName,width=10,height=8)
     test=image(lon-180, lat, oneDay,breaks=breaksAllMinTemp,col=colAllMinTemp,sub=paste("rcp45 ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
@@ -205,6 +233,7 @@ for(j in 1:length(tempMinFileNames_rcp85)){
     setwd(toSavePath)
     ## make image
     year=substr(tempMinFileNames_rcp85[j],nchar(as.character(tempMinFileNames_rcp85[j]))-11,nchar(as.character(tempMinFileNames_rcp85[j]))-8)
+    #breaksAllMinTemp=minTemp85Break[i,]
     devSVG(file=imgName,width=10,height=8)
     test=image(lon-180, lat, oneDay,breaks=breaksAllMinTemp,col=colAllMinTemp,sub=paste("rcp85 ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
@@ -226,6 +255,7 @@ for(j in 1:length(tempMaxFileNames_hist)){
     setwd(toSavePath)
     ## make image
     year=substr(tempMaxFileNames_hist[j],nchar(as.character(tempMaxFileNames_hist[j]))-11,nchar(as.character(tempMaxFileNames_hist[j]))-8)
+    #breaksAllMaxTemp=maxTempHistBreak[i,]
     devSVG(file=imgName,width=10,height=8)
     test=image(lon-180, lat, oneDay,breaks=breaksAllMaxTemp,col=colAllMaxTemp,sub=paste("historical ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
@@ -247,6 +277,7 @@ for(j in 1:length(tempMaxFileNames_rcp45)){
     setwd(toSavePath)
     ## make image
     year=substr(tempMaxFileNames_rcp45[j],nchar(as.character(tempMaxFileNames_rcp45[j]))-11,nchar(as.character(tempMaxFileNames_rcp45[j]))-8)
+    #breaksAllMaxTemp=maxTemp45Break[i,]
     devSVG(file=imgName,width=10,height=8)
     test=image(lon-180, lat, oneDay,breaks=breaksAllMaxTemp,col=colAllMaxTemp,sub=paste("rcp45 ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
@@ -269,6 +300,7 @@ for(j in 1:length(tempMaxFileNames_rcp85)){
     setwd(toSavePath)
     ## make image
     year=substr(tempMaxFileNames_rcp85[j],nchar(as.character(tempMaxFileNames_rcp85[j]))-11,nchar(as.character(tempMaxFileNames_rcp85[j]))-8)
+    #breaksAllMaxTemp=maxTemp85Break[i,]
     devSVG(file=imgName,width=10,height=8)
     test=image(lon-180, lat, oneDay,breaks=breaksAllMaxTemp,col=colAllMaxTemp,sub=paste("rcp85 ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
