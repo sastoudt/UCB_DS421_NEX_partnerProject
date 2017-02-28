@@ -276,3 +276,13 @@ for(i in 1:nrow(tagList)){
 #dev.off()
 
 
+### image slider
+
+#http://www.smartjava.org/examples/percfader/
+## tried to make a skeleton, in d3Practice/imgSlider
+## unique to png? have svg
+
+## Ask Proxima
+## can't install
+##<script src="./js/chroma.min.js"></script>
+##<script src="./js/tween.min.js"></script>
