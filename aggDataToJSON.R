@@ -41,6 +41,31 @@ lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
 lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
 lonLatGridPlusValue$pr=as.numeric(as.character(lonLatGridPlusValue$pr))
 
+miniSubCSV=lonLatGridPlusValue[1000:1100,]
+## add random colors to test out d3 code
+require(RColorBrewer)
+colToUse=brewer.pal(5, "YlOrRd")
+miniSubCSV$col=colToUse[sample(1:5,101,replace=T)]
+write.csv(miniSubCSV,"testMini.csv",row.names=F)
+
+## Not showing up
+require(maps)
+map("world")
+points(miniSubCSV$lon, miniSubCSV$lat)
+points(miniSubCSV$lon-180, miniSubCSV$lat)
+
+## try different subset
+miniSubCSV=lonLatGridPlusValue[50000:51000,]
+map("world")
+#points(miniSubCSV$lon, miniSubCSV$lat)
+points(miniSubCSV$lon-180, miniSubCSV$lat)
+miniSubCSV$col=colToUse[sample(1:5,1001,replace=T)]
+write.csv(miniSubCSV,"testMini2.csv",row.names=F)
+## still unclear whether we want to subtract 180, will be able to tell better when we have real colors
+
+## slow to load in D3 but it does
+lonLatGridPlusValue$col=colToUse[sample(1:5,nrow(lonLatGridPlusValue),replace=T)]
+write.csv(lonLatGridPlusValue,"whole.csv",row.names=F)
 
 library(jsonlite)
 #x <- toJSON(lonLatGridPlusValue)
