@@ -1,7 +1,7 @@
 ## remove 2 from filesToDownload and curlStatements for Sara
 
 ## Run this in terminal
-##ls -R /path/to/NEX/data >"listmyfolder.txt"
+##ls -R /path/to/data >"listmyfolder.txt"
 
 listmyfolder <- read.table("listmyfolder.txt", header=TRUE, quote="\"", stringsAsFactors=FALSE)
 
