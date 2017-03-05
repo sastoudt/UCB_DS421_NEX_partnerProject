@@ -71,7 +71,15 @@ colAllMaxTemp=brewer.pal(4,"YlOrRd")
 # maxTemp45Break=read.csv("maxTemp45Break.csv",stringsAsFactors=F)
 # maxTemp85Break=read.csv("maxTemp85Break.csv",stringsAsFactors=F)
 
+makePNG=F ## false means it will make an SVG
 
+if(makePNG){
+  imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
+  png(file=imgName,width=10,height=8,units="in",res = 300)
+}else{
+  imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+  devSVG(file=imgName,width=10,height=8)
+}
 
 
 ## since looping over tagList, can easily run the code for only our half
@@ -111,12 +119,19 @@ for(j in 1:length(prFileNames_hist)){
     oneDay=precipHist[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep="")
-    imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+    #imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
     year=substr(prFileNames_hist[j],nchar(as.character(prFileNames_hist[j]))-11,nchar(as.character(prFileNames_hist[j]))-8)
     #breaksAllPr=prHistBreak[i,]
-    devSVG(file=imgName,width=10,height=8)
+    if(makePNG){
+      imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
+      png(file=imgName,width=10,height=8,units="in",res = 300)
+    }else{
+      imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+      devSVG(file=imgName,width=10,height=8)
+    }
+    
     test=image(lon-180, lat, oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("historical ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ## + key
     dev.off()
@@ -136,12 +151,18 @@ for(j in 1:length(prFileNames_rcp45)){
     oneDay=precip45[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/pr/",sep="")
-    imgName=paste(prFileNames_rcp45[j],"day",k,".svg",sep="")
+    #imgName=paste(prFileNames_rcp45[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
     year=substr(prFileNames_rcp45[j],nchar(as.character(prFileNames_rcp45[j]))-11,nchar(as.character(prFileNames_rcp45[j]))-8)
     #breaksAllPr=pr45Break[i,]
-    devSVG(file=imgName,width=10,height=8)
+    if(makePNG){
+      imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
+      png(file=imgName,width=10,height=8,units="in",res = 300)
+    }else{
+      imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+      devSVG(file=imgName,width=10,height=8)
+    }
     test=image(lon-180, lat, oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("rcp45 ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
@@ -159,12 +180,19 @@ for(j in 1:length(prFileNames_rcp85)){
     oneDay=precip85[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/pr/",sep="")
-    imgName=paste(prFileNames_rcp85[j],"day",k,".svg",sep="")
+    #imgName=paste(prFileNames_rcp85[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
     year=substr(prFileNames_rcp85[j],nchar(as.character(prFileNames_rcp85[j]))-11,nchar(as.character(prFileNames_rcp85[j]))-8)
     #breaksAllPr=pr85Break[i,]
-    devSVG(file=imgName,width=10,height=8)
+    if(makePNG){
+      imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
+      png(file=imgName,width=10,height=8,units="in",res = 300)
+    }else{
+      imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+      devSVG(file=imgName,width=10,height=8)
+    }
+    
     test=image(lon-180, lat, oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("rcp85 ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
@@ -183,12 +211,19 @@ for(j in 1:length(tempMinFileNames_hist)){
     oneDay=tempMinHist[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
-    imgName=paste(tempMinFileNames_hist[j],"day",k,".svg",sep="")
+    #imgName=paste(tempMinFileNames_hist[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
     year=substr(tempMinFileNames_hist[j],nchar(as.character(tempMinFileNames_hist[j]))-11,nchar(as.character(tempMinFileNames_hist[j]))-8)
     #breaksAllMinTemp=minTempHistBreak[i,]
-    devSVG(file=imgName,width=10,height=8)
+    if(makePNG){
+      imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
+      png(file=imgName,width=10,height=8,units="in",res = 300)
+    }else{
+      imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+      devSVG(file=imgName,width=10,height=8)
+    }
+    
     test=image(lon-180, lat, oneDay,breaks=breaksAllMinTemp,col=colAllMinTemp,sub=paste("historical ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
@@ -207,12 +242,19 @@ for(j in 1:length(tempMinFileNames_rcp45)){
     oneDay=tempMin45[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmin/",sep="")
-    imgName=paste(tempMinFileNames_rcp45[j],"day",k,".svg",sep="")
+    #imgName=paste(tempMinFileNames_rcp45[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
     year=substr(tempMinFileNames_rcp45[j],nchar(as.character(tempMinFileNames_rcp45[j]))-11,nchar(as.character(tempMinFileNames_rcp45[j]))-8)
     #breaksAllMinTemp=minTemp45Break[i,]
-    devSVG(file=imgName,width=10,height=8)
+    if(makePNG){
+      imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
+      png(file=imgName,width=10,height=8,units="in",res = 300)
+    }else{
+      imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+      devSVG(file=imgName,width=10,height=8)
+    }
+    
     test=image(lon-180, lat, oneDay,breaks=breaksAllMinTemp,col=colAllMinTemp,sub=paste("rcp45 ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
@@ -229,12 +271,19 @@ for(j in 1:length(tempMinFileNames_rcp85)){
     oneDay=tempMin85[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmin/",sep="")
-    imgName=paste(tempMinFileNames_rcp85[j],"day",k,".svg",sep="")
+    #imgName=paste(tempMinFileNames_rcp85[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
     year=substr(tempMinFileNames_rcp85[j],nchar(as.character(tempMinFileNames_rcp85[j]))-11,nchar(as.character(tempMinFileNames_rcp85[j]))-8)
     #breaksAllMinTemp=minTemp85Break[i,]
-    devSVG(file=imgName,width=10,height=8)
+    if(makePNG){
+      imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
+      png(file=imgName,width=10,height=8,units="in",res = 300)
+    }else{
+      imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+      devSVG(file=imgName,width=10,height=8)
+    }
+    
     test=image(lon-180, lat, oneDay,breaks=breaksAllMinTemp,col=colAllMinTemp,sub=paste("rcp85 ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
@@ -251,12 +300,19 @@ for(j in 1:length(tempMaxFileNames_hist)){
     oneDay=tempMaxHist[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
-    imgName=paste(tempMaxFileNames_hist[j],"day",k,".svg",sep="")
+    #imgName=paste(tempMaxFileNames_hist[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
     year=substr(tempMaxFileNames_hist[j],nchar(as.character(tempMaxFileNames_hist[j]))-11,nchar(as.character(tempMaxFileNames_hist[j]))-8)
     #breaksAllMaxTemp=maxTempHistBreak[i,]
-    devSVG(file=imgName,width=10,height=8)
+    if(makePNG){
+      imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
+      png(file=imgName,width=10,height=8,units="in",res = 300)
+    }else{
+      imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+      devSVG(file=imgName,width=10,height=8)
+    }
+    
     test=image(lon-180, lat, oneDay,breaks=breaksAllMaxTemp,col=colAllMaxTemp,sub=paste("historical ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
@@ -273,12 +329,19 @@ for(j in 1:length(tempMaxFileNames_rcp45)){
     oneDay=tempMax45[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmax/",sep="")
-    imgName=paste(tempMaxFileNames_rcp45[j],"day",k,".svg",sep="")
+    #imgName=paste(tempMaxFileNames_rcp45[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
     year=substr(tempMaxFileNames_rcp45[j],nchar(as.character(tempMaxFileNames_rcp45[j]))-11,nchar(as.character(tempMaxFileNames_rcp45[j]))-8)
     #breaksAllMaxTemp=maxTemp45Break[i,]
-    devSVG(file=imgName,width=10,height=8)
+    if(makePNG){
+      imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
+      png(file=imgName,width=10,height=8,units="in",res = 300)
+    }else{
+      imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+      devSVG(file=imgName,width=10,height=8)
+    }
+    
     test=image(lon-180, lat, oneDay,breaks=breaksAllMaxTemp,col=colAllMaxTemp,sub=paste("rcp45 ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
@@ -296,12 +359,19 @@ for(j in 1:length(tempMaxFileNames_rcp85)){
     oneDay=tempMax85[,,k]
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmax/",sep="")
-    imgName=paste(tempMaxFileNames_rcp85[j],"day",k,".svg",sep="")
+    #imgName=paste(tempMaxFileNames_rcp85[j],"day",k,".svg",sep="")
     setwd(toSavePath)
     ## make image
     year=substr(tempMaxFileNames_rcp85[j],nchar(as.character(tempMaxFileNames_rcp85[j]))-11,nchar(as.character(tempMaxFileNames_rcp85[j]))-8)
     #breaksAllMaxTemp=maxTemp85Break[i,]
-    devSVG(file=imgName,width=10,height=8)
+    if(makePNG){
+      imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
+      png(file=imgName,width=10,height=8,units="in",res = 300)
+    }else{
+      imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+      devSVG(file=imgName,width=10,height=8)
+    }
+    
     test=image(lon-180, lat, oneDay,breaks=breaksAllMaxTemp,col=colAllMaxTemp,sub=paste("rcp85 ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
     map("world",add=T) ##   + key
     dev.off()
