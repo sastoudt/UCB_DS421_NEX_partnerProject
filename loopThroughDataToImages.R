@@ -81,6 +81,12 @@ if(makePNG){
   devSVG(file=imgName,width=10,height=8)
 }
 
+quantilePrHist=quantilePr45=quantilePr85=quantileMinTempHist=
+  quantileMinTemp45=quantileMinTemp85=quantileMaxTempHist=quantileMaxTemp45=quantileMaxTemp85=c()
+
+quantilePrHistTemporary=quantilePr45Temporary=quantilePr85Temporary=quantileMinTempHistTemporary=
+  quantileMinTemp45Temporary=quantileMinTemp85Temporary=quantileMaxTempHistTemporary=quantileMaxTemp45Temporary=
+  quantileMaxTemp85Temporary=c()
 
 ## since looping over tagList, can easily run the code for only our half
 for(i in 1:nrow(tagList)){
@@ -117,6 +123,7 @@ for(j in 1:length(prFileNames_hist)){
   nc_close(ncin)
   for(k in 1:(dim(precipHist)[3])){
     oneDay=precipHist[,,k]
+    quantilePrHistTemporary=rbind(quantilePrHistTemporary,quantile(c(oneDay),seq(0,1,by=.1),na.rm=T))
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep="")
     #imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
@@ -149,6 +156,8 @@ for(j in 1:length(prFileNames_rcp45)){
   
   for(k in 1:(dim(precip45)[3])){
     oneDay=precip45[,,k]
+    quantilePr45Temporary=rbind(quantilePr45Temporary,quantile(c(oneDay),seq(0,1,by=.1),na.rm=T))
+    
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/pr/",sep="")
     #imgName=paste(prFileNames_rcp45[j],"day",k,".svg",sep="")
@@ -178,6 +187,8 @@ for(j in 1:length(prFileNames_rcp85)){
   
   for(k in 1:(dim(precip85)[3])){
     oneDay=precip85[,,k]
+    quantilePr85Temporary=rbind(quantilePr85Temporary,quantile(c(oneDay),seq(0,1,by=.1),na.rm=T))
+    
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/pr/",sep="")
     #imgName=paste(prFileNames_rcp85[j],"day",k,".svg",sep="")
@@ -209,6 +220,8 @@ for(j in 1:length(tempMinFileNames_hist)){
   
   for(k in 1:(dim(tempMinHist)[3])){
     oneDay=tempMinHist[,,k]
+    quantileMinTempHistTemporary=rbind(quantileMinTempHistTemporary,quantile(c(oneDay),seq(0,1,by=.1),na.rm=T))
+    
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
     #imgName=paste(tempMinFileNames_hist[j],"day",k,".svg",sep="")
@@ -240,6 +253,8 @@ for(j in 1:length(tempMinFileNames_rcp45)){
   
   for(k in 1:(dim(tempMin45)[3])){
     oneDay=tempMin45[,,k]
+    quantileMinTemp45Temporary=rbind(quantileMinTemp45Temporary,quantile(c(oneDay),seq(0,1,by=.1),na.rm=T))
+    
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmin/",sep="")
     #imgName=paste(tempMinFileNames_rcp45[j],"day",k,".svg",sep="")
@@ -269,6 +284,8 @@ for(j in 1:length(tempMinFileNames_rcp85)){
   
   for(k in 1:(dim(tempMin85)[3])){
     oneDay=tempMin85[,,k]
+    quantileMinTemp85Temporary=rbind(quantileMinTemp85Temporary,quantile(c(oneDay),seq(0,1,by=.1),na.rm=T))
+    
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmin/",sep="")
     #imgName=paste(tempMinFileNames_rcp85[j],"day",k,".svg",sep="")
@@ -298,6 +315,8 @@ for(j in 1:length(tempMaxFileNames_hist)){
   nc_close(ncin)
   for(k in 1:(dim(tempMaxHist)[3])){
     oneDay=tempMaxHist[,,k]
+    quantileMaxTempHistTemporary=rbind(quantileMaxTempHistTemporary,quantile(c(oneDay),seq(0,1,by=.1),na.rm=T))
+    
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
     #imgName=paste(tempMaxFileNames_hist[j],"day",k,".svg",sep="")
@@ -327,6 +346,8 @@ for(j in 1:length(tempMaxFileNames_rcp45)){
   nc_close(ncin)
   for(k in 1:(dim(tempMax45)[3])){
     oneDay=tempMax45[,,k]
+    quantileMaxTemp45Temporary=rbind(quantileMaxTemp45Temporary,quantile(c(oneDay),seq(0,1,by=.1),na.rm=T))
+    
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmax/",sep="")
     #imgName=paste(tempMaxFileNames_rcp45[j],"day",k,".svg",sep="")
@@ -357,6 +378,8 @@ for(j in 1:length(tempMaxFileNames_rcp85)){
   nc_close(ncin)
   for(k in 1:(dim(tempMax85)[3])){
     oneDay=tempMax85[,,k]
+    quantileMaxTemp85Temporary=rbind(quantileMaxTemp85Temporary,quantile(c(oneDay),seq(0,1,by=.1),na.rm=T))
+    
     ## make and save image
     toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmax/",sep="")
     #imgName=paste(tempMaxFileNames_rcp85[j],"day",k,".svg",sep="")
@@ -378,6 +401,68 @@ for(j in 1:length(tempMaxFileNames_rcp85)){
   }
 }
 
+## aggregate temporary quantiles
+
+minOfMins=min(quantilePrHistTemporary[,1])
+mid=apply(quantilePrHistTemporary[,2:10],2,mean)
+maxOfMaxs=max(quantilePrHistTemporary[,11])
+quantilePrHist=rbind(quantilePrHist,c(minOfMins,mid,maxOfMaxs))
+
+minOfMins=min(quantilePr45Temporary[,1])
+mid=apply(quantilePr45Temporary[,2:10],2,mean)
+maxOfMaxs=max(quantilePr45Temporary[,11])
+quantilePr45=rbind(quantilePr45,c(minOfMins,mid,maxOfMaxs))
+
+minOfMins=min(quantilePr85Temporary[,1])
+mid=apply(quantilePr85Temporary[,2:10],2,mean)
+maxOfMaxs=max(quantilePr85Temporary[,11])
+quantilePr85=rbind(quantilePr85,c(minOfMins,mid,maxOfMaxs))
+
+minOfMins=min(quantileMinTempHistTemporary[,1])
+mid=apply(quantileMinTempHistTemporary[,2:10],2,mean)
+maxOfMaxs=max(quantileMinTempHistTemporary[,11])
+quantileMinTempHist=rbind(quantileMinTempHist,c(minOfMins,mid,maxOfMaxs))
+
+minOfMins=min(quantileMinTemp45Temporary[,1])
+mid=apply(quantileMinTemp45Temporary[,2:10],2,mean)
+maxOfMaxs=max(quantileMinTemp45Temporary[,11])
+quantileMinTemp45=rbind(quantileMinTemp45,c(minOfMins,mid,maxOfMaxs))
+
+minOfMins=min(quantileMinTemp85Temporary[,1])
+mid=apply(quantileMinTemp85Temporary[,2:10],2,mean)
+maxOfMaxs=max(quantileMinTemp85Temporary[,11])
+quantileMinTemp85=rbind(quantileMinTemp85,c(minOfMins,mid,maxOfMaxs))
+
+minOfMins=min(quantileMaxTempHistTemporary[,1])
+mid=apply(quantileMaxTempHistTemporary[,2:10],2,mean)
+maxOfMaxs=max(quantileMaxTempHistTemporary[,11])
+quantileMaxTempHist=rbind(quantileMaxTempHist,c(minOfMins,mid,maxOfMaxs))
+
+minOfMins=min(quantileMaxTemp45Temporary[,1])
+mid=apply(quantileMaxTemp45Temporary[,2:10],2,mean)
+maxOfMaxs=max(quantileMaxTemp45Temporary[,11])
+quantileMaxTemp45=rbind(quantileMaxTemp45,c(minOfMins,mid,maxOfMaxs))
+
+minOfMins=min(quantileMaxTemp85Temporary[,1])
+mid=apply(quantileMaxTemp85Temporary[,2:10],2,mean)
+maxOfMaxs=max(quantileMaxTemp85Temporary[,11])
+quantileMaxTemp85=rbind(quantileMaxTemp85,c(minOfMins,mid,maxOfMaxs))
 
 }
+
+gitHubWD=""
+
+setwd(gitHubWD)
+
+write.csv(quantilePrHist,"quantileFromAllDataPrHist.csv",row.names=F)
+write.csv(quantilePr45,"quantileFromAllDataPr45.csv",row.names=F)
+write.csv(quantilePr85,"quantileFromAllDataPr85.csv",row.names=F)
+
+write.csv(quantileMinTempHist,"quantileFromAllDataMinTempHist.csv",row.names=F)
+write.csv(quantileMinTemp45,"quantileFromAllDataMinTemp45.csv",row.names=F)
+write.csv(quantileMinTemp85,"quantileFromAllDataMinTemp85.csv",row.names=F)
+
+write.csv(quantileMaxTempHist,"quantileFromAllDataMaxTempHist.csv",row.names=F)
+write.csv(quantileMaxTemp45,"quantileFromAllDataMaxTemp45.csv",row.names=F)
+write.csv(quantileMaxTemp85,"quantileFromAllDataMaxTemp85.csv",row.names=F)
 
