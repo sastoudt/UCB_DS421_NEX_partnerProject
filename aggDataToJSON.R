@@ -805,3 +805,131 @@ write.csv(quantAvgAllMaxTemp85,"quantilesMaxTemp85AggAvg.csv",row.names=F)
 write.csv(quantSDAllMaxTempHist,"quantilesMaxTempHistAggSD.csv",row.names=F)
 write.csv(quantSDAllMaxTemp45,"quantilesMaxTempHistAggSD.csv",row.names=F)
 write.csv(quantSDAllMaxTemp85,"quantilesMaxTempHistAggSD.csv",row.names=F)
+
+##### make legends ####
+
+require(RColorBrewer)
+require(R2BayesX)
+library(RSvgDevice)
+
+for(i in 1:nrow(tagList)){
+  toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_prHistLegendAggAvg.svg",sep="")
+  toPlot=quantAvgAllPrHist[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  imgName=paste(tagList[i,1],"_prHistLegendAggSD.svg",sep="")
+  toPlot=quantSDAllPrHist[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/pr/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_pr45LegendAggAvg.svg",sep="")
+  toPlot=quantAvgAllPr45[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  imgName=paste(tagList[i,1],"_pr45LegendAggSD.svg",sep="")
+  toPlot=quantSDAllPr45[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/pr/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_pr85LegendAggAvg.svg",sep="")
+  toPlot=quantAvgAllPr85[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  imgName=paste(tagList[i,1],"_pr85LegendAggSD.svg",sep="")
+  toPlot=quantSDAllPr85[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_minTempHistLegendAggAvg.svg",sep="")
+  toPlot=quantAvgAllMinTempHist[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  imgName=paste(tagList[i,1],"_minTempHistLegendAggSD.svg",sep="")
+  toPlot=quantSDAllMinTempHist[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmin/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_minTemp45LegendAggAvg.svg",sep="")
+  toPlot=quantAvgAllMinTemp45[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  imgName=paste(tagList[i,1],"_minTemp45LegendAggSD.svg",sep="")
+  toPlot=quantSDAllMinTemp45[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmin/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_minTemp85LegendAggAvg.svg",sep="")
+  toPlot=quantAvgAllMinTemp85[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  imgName=paste(tagList[i,1],"_minTemp85LegendAggSD.svg",sep="")
+  toPlot=quantSDAllMinTemp85[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_maxTempHistLegendAggAvg.svg",sep="")
+  toPlot=quantAvgAllMaxTempHist[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  imgName=paste(tagList[i,1],"_maxTempHistLegendAggSD.svg",sep="")
+  toPlot=quantSDAllMaxTempHist[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmax/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_maxTemp45LegendAggAvg.svg",sep="")
+  toPlot=quantAvgAllMaxTemp45[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  imgName=paste(tagList[i,1],"_maxTemp85LegendAggSD.svg",sep="")
+  toPlot=quantAvgAllMaxTemp45[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmax/",sep="")
+  setwd(toSavePath)
+  imgName=paste(tagList[i,1],"_maxTemp85LegendAggAvg.svg",sep="")
+  toPlot=quantAvgAllMaxTemp85[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  imgName=paste(tagList[i,1],"_maxTemp85LegendAggSD.svg",sep="")
+  toPlot=quantSDAllMaxTemp85[i,]
+  devSVG(file=imgName,width=12,height=4)
+  colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  dev.off()
+  
+  
+}
+
