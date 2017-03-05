@@ -377,6 +377,18 @@ setwd(gitHubDir)
 lon=read.csv("lon.csv",stringsAsFactors=F)
 lat=read.csv("lat.csv",stringsAsFactors=F)
 lonLatGrid=expand.grid(lon[,1],lat[,1])
+quantAvgAllPrHist=quantSDAllPrHist=c()
+quantAvgAllMinTempHist=quantSDAllMinTempHist=c()
+quantAvgAllMaxTempHist=quantSDAllMaxTempHist=c()
+
+quantAvgAllPr45=quantSDAllPr45=c()
+quantAvgAllMinTemp45=quantSDAllMinTemp45=c()
+quantAvgAllMaxTemp45=quantSDAllMaxTemp45=c()
+
+quantAvgAllPr85=quantSDAllPr85=c()
+quantAvgAllMinTemp85=quantSDAllMinTemp85=c()
+quantAvgAllMaxTemp85=quantSDAllMaxTemp85=c()
+
 for(i in 1:nrow(tagList)){
   
   ## split by type of data
@@ -423,12 +435,24 @@ for(i in 1:nrow(tagList)){
   avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
   sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
   
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1))
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1))
+  
+  quantAvgAllPrHist=rbind(quantAvgAllPrHist,quantAvg)
+  quantSDAllPrHist=rbind(quantSDAllPrHist,quantSD)
+  
+  avgDiffCol=cut(c(avgDiff),quantAvg)
+  sdDiffCol=cut(c(sdDiff),quantSD)
+  
+  
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
+  lonLatGridPlusValue$avgDiffCol=avgDiffCol
+  lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
 
@@ -452,12 +476,24 @@ for(i in 1:nrow(tagList)){
   avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
   sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
   
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1))
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1))
+  
+  quantAvgAllPr45=rbind(quantAvgAllPr45,quantAvg)
+  quantSDAllPr45=rbind(quantSDAllPr45,quantSD)
+  
+  avgDiffCol=cut(c(avgDiff),quantAvg)
+  sdDiffCol=cut(c(sdDiff),quantSD)
+  
+  
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
+  lonLatGridPlusValue$avgDiffCol=avgDiffCol
+  lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/pr/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
@@ -482,12 +518,24 @@ for(i in 1:nrow(tagList)){
   avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
   sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
   
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1))
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1))
+  
+  quantAvgAllPr85=rbind(quantAvgAllPr85,quantAvg)
+  quantSDAllPr85=rbind(quantSDAllPr85,quantSD)
+  
+  avgDiffCol=cut(c(avgDiff),quantAvg)
+  sdDiffCol=cut(c(sdDiff),quantSD)
+  
+  
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
+  lonLatGridPlusValue$avgDiffCol=avgDiffCol
+  lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/pr/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
@@ -511,6 +559,15 @@ for(i in 1:nrow(tagList)){
   diffAcrossYears=apply(tempMinHistYr,c(1,2),diff)
   avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
   sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1))
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1))
+  
+  quantAvgAllMinTempHist=rbind(quantAvgAllMinTempHist,quantAvg)
+  quantSDAllMinTempHist=rbind(quantSDAllMinTempHist,quantSD)
+  
+  avgDiffCol=cut(c(avgDiff),quantAvg)
+  sdDiffCol=cut(c(sdDiff),quantSD)
+  
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
@@ -518,6 +575,8 @@ for(i in 1:nrow(tagList)){
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
+  lonLatGridPlusValue$avgDiffCol=avgDiffCol
+  lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
@@ -542,12 +601,21 @@ for(i in 1:nrow(tagList)){
   avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
   sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
   
+  quantAvgAllMinTemp45=rbind(quantAvgAllMinTemp45,quantAvg)
+  quantSDAllMinTemp45=rbind(quantSDAllMinTemp45,quantSD)
+  
+  avgDiffCol=cut(c(avgDiff),quantAvg)
+  sdDiffCol=cut(c(sdDiff),quantSD)
+  
+  
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
+  lonLatGridPlusValue$avgDiffCol=avgDiffCol
+  lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmin/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
@@ -572,12 +640,21 @@ for(i in 1:nrow(tagList)){
   avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
   sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
   
+  quantAvgAllMinTemp85=rbind(quantAvgAllMinTemp85,quantAvg)
+  quantSDAllMinTemp85=rbind(quantSDAllMinTemp85,quantSD)
+  
+  avgDiffCol=cut(c(avgDiff),quantAvg)
+  sdDiffCol=cut(c(sdDiff),quantSD)
+  
+  
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
+  lonLatGridPlusValue$avgDiffCol=avgDiffCol
+  lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmin/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
@@ -603,12 +680,21 @@ for(i in 1:nrow(tagList)){
   avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
   sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
   
+  quantAvgAllMaxTempHist=rbind(quantAvgAllMaxTempHist,quantAvg)
+  quantSDAllMaxTempHist=rbind(quantSDAllMaxTempHist,quantSD)
+  
+  avgDiffCol=cut(c(avgDiff),quantAvg)
+  sdDiffCol=cut(c(sdDiff),quantSD)
+  
+  
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
+  lonLatGridPlusValue$avgDiffCol=avgDiffCol
+  lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
@@ -632,6 +718,12 @@ for(i in 1:nrow(tagList)){
   diffAcrossYears=apply(tempMax45Yr,c(1,2),diff)
   avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
   sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  quantAvgAllMaxTemp45=rbind(quantAvgAllMaxTemp45,quantAvg)
+  quantSDAllMaxTemp45=rbind(quantSDAllMaxTemp45,quantSD)
+  
+  avgDiffCol=cut(c(avgDiff),quantAvg)
+  sdDiffCol=cut(c(sdDiff),quantSD)
+  
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
@@ -639,6 +731,8 @@ for(i in 1:nrow(tagList)){
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
+  lonLatGridPlusValue$avgDiffCol=avgDiffCol
+  lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
@@ -662,6 +756,12 @@ for(i in 1:nrow(tagList)){
   diffAcrossYears=apply(tempMax85Yr,c(1,2),diff)
   avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
   sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  quantAvgAllMaxTemp85=rbind(quantAvgAllMaxTemp85,quantAvg)
+  quantSDAllMaxTemp85=rbind(quantSDAllMaxTemp85,quantSD)
+  
+  avgDiffCol=cut(c(avgDiff),quantAvg)
+  sdDiffCol=cut(c(sdDiff),quantSD)
+  
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
@@ -669,8 +769,39 @@ for(i in 1:nrow(tagList)){
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
+  lonLatGridPlusValue$avgDiffCol=avgDiffCol
+  lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
   
 }
+
+gitHubDir=""
+setwd(gitHubDir)
+
+write.csv(quantAvgAllPrHist,"quantilesPrHistAggAvg.csv",row.names=F)
+write.csv(quantAvgAllPr45,"quantilesPr45AggAvg.csv",row.names=F)
+write.csv(quantAvgAllPr85,"quantilesPr85AggAvg.csv",row.names=F)
+
+write.csv(quantSDAllPrHist,"quantilesPrHistAggSD.csv",row.names=F)
+write.csv(quantSDAllPr45,"quantilesPrHistAggSD.csv",row.names=F)
+write.csv(quantSDAllPr85,"quantilesPrHistAggSD.csv",row.names=F)
+
+
+write.csv(quantAvgAllMinTempHist,"quantilesMinTempHistAggAvg.csv",row.names=F)
+write.csv(quantAvgAllMinTemp45,"quantilesMinTemp45AggAvg.csv",row.names=F)
+write.csv(quantAvgAllMinTemp85,"quantilesMinTemp85AggAvg.csv",row.names=F)
+
+write.csv(quantSDAllMinTempHist,"quantilesMinTempHistAggSD.csv",row.names=F)
+write.csv(quantSDAllMinTemp45,"quantilesMinTempHistAggSD.csv",row.names=F)
+write.csv(quantSDAllMinTemp85,"quantilesMinTempHistAggSD.csv",row.names=F)
+
+
+write.csv(quantAvgAllMaxTempHist,"quantilesMaxTempHistAggAvg.csv",row.names=F)
+write.csv(quantAvgAllMaxTemp45,"quantilesMaxTemp45AggAvg.csv",row.names=F)
+write.csv(quantAvgAllMaxTemp85,"quantilesMaxTemp85AggAvg.csv",row.names=F)
+
+write.csv(quantSDAllMaxTempHist,"quantilesMaxTempHistAggSD.csv",row.names=F)
+write.csv(quantSDAllMaxTemp45,"quantilesMaxTempHistAggSD.csv",row.names=F)
+write.csv(quantSDAllMaxTemp85,"quantilesMaxTempHistAggSD.csv",row.names=F)
