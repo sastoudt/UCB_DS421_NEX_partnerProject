@@ -29,6 +29,7 @@ for(i in 1:length(stillToDownload)){
   idx=c(idx,which(filesToDownload==stillToDownload[i]))
   
 }
+length(idx) ## 5098 v. 3727 
 
 curlStatements=read.csv("curlStatements.csv",stringsAsFactors=F,header=F)
 
