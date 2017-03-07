@@ -699,7 +699,7 @@ for(i in 1:nrow(tagList)){
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
   
-  tempMax45HistYr=array(0,c(1440,720,length(tempMaxFileNames_rcp45)))
+  tempMax45Yr=array(0,c(1440,720,length(tempMaxFileNames_rcp45)))
   
   for(j in 1:length(tempMaxFileNames_rcp45)){
     ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp45[j],sep="")
@@ -736,7 +736,7 @@ for(i in 1:nrow(tagList)){
   nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
-  tempMax85HistYr=array(0,c(1440,720,length(tempMaxFileNames_rcp85)))
+  tempMax85Yr=array(0,c(1440,720,length(tempMaxFileNames_rcp85)))
   
   for(j in 1:length(tempMaxFileNames_rcp85)){
     ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp85[j],sep="")
