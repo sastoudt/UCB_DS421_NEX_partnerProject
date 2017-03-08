@@ -69,6 +69,7 @@ for(i in 1:nrow(tagList)){
     
     test=apply(precipHist,c(1,2),mean)
     quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+    print(paste("precip",k,sep=" "))
   }
   prHistBreak[i,]=apply(quants,2,mean)
   
@@ -107,6 +108,8 @@ for(i in 1:nrow(tagList)){
     
     test=apply(tempMinHist,c(1,2),mean)
     quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+    print(paste("min temp",k,sep=" "))
+    
   }
   minTempHistBreak[i,]=apply(quants,2,mean)
   
@@ -144,6 +147,7 @@ for(i in 1:nrow(tagList)){
     
     test=apply(tempMaxHist,c(1,2),mean)
     quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+    print(paste("max temp",k,sep=" "))
     
   }
   maxTempHistBreak[i,]=apply(quants,2,mean)
@@ -172,8 +176,11 @@ for(i in 1:nrow(tagList)){
 #     quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
 #   }
 #   maxTemp85Break[i,]=apply(quants,2,mean)
-# }
+  
+  print(paste("tag",i,sep=" "))
+ }
 
+## save to github folder
 gitHubWD=""
 
 setwd(gitHubWD)
@@ -267,6 +274,7 @@ for(i in 1:nrow(tagList)){
   # devSVG(file=imgName,width=12,height=4)
   # colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
   # dev.off()
+  print(paste("tag",k,"images saved",sep=" "))
   
   
 }

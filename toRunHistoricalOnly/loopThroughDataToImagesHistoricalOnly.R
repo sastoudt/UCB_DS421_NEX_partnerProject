@@ -3,8 +3,10 @@ library(maps)
 library(ncdf4)
 library(RSvgDevice)
 
+## yourPathDoData should be up to rawdata and end with a backslash
 yourPathToData="/Volumes/Seagate_Expansion_5TB_jtb/NASA/climate"
 
+## set to gitHub working directory to read in some files to get set up
 setwd("~/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/")
 
 tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F) ## get tagList for different models
@@ -58,6 +60,7 @@ colAllMaxTemp=c(brewer.pal(9,"YlOrRd"),"black")
 ## might need to further break down by historical, rcp45, rcp85
 
 ### comment out for now until we actually have these
+## github directory, where you saved the breaks from running getBreaksMakeLegendsHistoricalOnly.R
 setwd("~/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/")
 prHistBreak=read.csv("prHistBreak.csv",stringsAsFactors=F)
 #pr45Break=read.csv.csv("pr45Break.csv",stringsAsFactors=F)
@@ -73,14 +76,15 @@ maxTempHistBreak=read.csv("maxTempHistBreak.csv",stringsAsFactors=F)
 
 makePNG=F ## false means it will make an SVG
 
-if(makePNG){
-  imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
-  png(file=imgName,width=10,height=8,units="in",res = 300)
-}else{
-  imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
-  devSVG(file=imgName,width=10,height=8)
-}
+# if(makePNG){
+#   imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
+#   png(file=imgName,width=10,height=8,units="in",res = 300)
+# }else{
+#   imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
+#   devSVG(file=imgName,width=10,height=8)
+# }
 
+## set up quantile keep track
 quantilePrHist=quantilePr45=quantilePr85=quantileMinTempHist=
   quantileMinTemp45=quantileMinTemp85=quantileMaxTempHist=quantileMaxTemp45=quantileMaxTemp85=c()
 
@@ -142,7 +146,11 @@ for(i in 1:nrow(tagList)){
       test=image(lon-180, lat, oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("historical ",tagList[i,1]),main=paste("Precip",year," Day ",k),xlab="lat",ylab="lon")
       map("world",add=T) ## + key
       dev.off()
+      print(paste("precip day",k,sep=" "))
+      
     }
+    print(paste("precip file",j,sep=" "))
+    
   }
   
   # for(j in 1:length(prFileNames_rcp45)){
@@ -240,8 +248,11 @@ for(i in 1:nrow(tagList)){
       test=image(lon-180, lat, oneDay,breaks=breaksAllMinTemp,col=colAllMinTemp,sub=paste("historical ",tagList[i,1]),main=paste("Min Temp",year," Day ",k),xlab="lat",ylab="lon")
       map("world",add=T) ##   + key
       dev.off()
+      print(paste("min temp day",k,sep=" "))
       
     }
+    print(paste("min temp file",j,sep=" "))
+    
   }
   
   # for(j in 1:length(tempMinFileNames_rcp45)){
@@ -335,7 +346,11 @@ for(i in 1:nrow(tagList)){
       test=image(lon-180, lat, oneDay,breaks=breaksAllMaxTemp,col=colAllMaxTemp,sub=paste("historical ",tagList[i,1]),main=paste("Max Temp",year," Day ",k),xlab="lat",ylab="lon")
       map("world",add=T) ##   + key
       dev.off()
+      print(paste("max temp day",k,sep=" "))
+      
     }
+    print(paste("max temp file",j,sep=" "))
+    
   }
   # 
   # for(j in 1:length(tempMaxFileNames_rcp45)){
@@ -447,9 +462,11 @@ for(i in 1:nrow(tagList)){
   # mid=apply(quantileMaxTemp85Temporary[,2:10],2,mean)
   # maxOfMaxs=max(quantileMaxTemp85Temporary[,11])
   # quantileMaxTemp85=rbind(quantileMaxTemp85,c(minOfMins,mid,maxOfMaxs))
+  print(paste("tag",i,sep=" "))
   
 }
 
+## save quantiles in GitHub folder for future reference
 gitHubWD=""
 
 setwd(gitHubWD)

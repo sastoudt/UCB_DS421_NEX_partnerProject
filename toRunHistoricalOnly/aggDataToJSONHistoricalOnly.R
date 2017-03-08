@@ -1,4 +1,6 @@
 ####### two summaries per tag #####
+
+## set GitHub directory to read in some files
 gitHubDir=""
 setwd(gitHubDir)
 lon=read.csv("lon.csv",stringsAsFactors=F)
@@ -56,6 +58,7 @@ for(i in 1:nrow(tagList)){
     oneDay=apply(precipHist,c(1,2),mean,na.rm=T)
     
     prHistYr[,,j]=oneDay
+    print(paste("precip file",j,sep=" "))
     
   }
   diffAcrossYears=apply(prHistYr,c(1,2),diff)
@@ -181,6 +184,7 @@ for(i in 1:nrow(tagList)){
     oneDay=apply(tempMinHist,c(1,2),mean,na.rm=T)
     
     tempMinHistYr[,,j]=oneDay
+    print(paste("min temp file",j,sep=" "))
     
   }
   diffAcrossYears=apply(tempMinHistYr,c(1,2),diff)
@@ -301,6 +305,7 @@ for(i in 1:nrow(tagList)){
     oneDay=apply(tempMaxHist,c(1,2),mean,na.rm=T)
     
     tempMaxHistYr[,,j]=oneDay
+    print(paste("max temp file",j,sep=" "))
     
   }
   diffAcrossYears=apply(tempMaxHistYr,c(1,2),diff)
@@ -401,9 +406,12 @@ for(i in 1:nrow(tagList)){
   # nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/","aggResults.csv",sep="")
   # write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   # 
-  # 
+  #
+  print(paste("tag",i,sep=" "))
+  
 }
 
+## save quantiles for aggregation to GitHub folder
 gitHubDir=""
 setwd(gitHubDir)
 
@@ -556,6 +564,7 @@ for(i in 1:nrow(tagList)){
   # devSVG(file=imgName,width=12,height=4)
   # colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
   # dev.off()
+  print(paste("tag",i,sep=" "))
   
   
 }
