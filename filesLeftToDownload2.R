@@ -29,11 +29,11 @@ for(i in 1:length(stillToDownload)){
   idx=c(idx,which(filesToDownload==stillToDownload[i]))
   
 }
-length(idx) ## 5098 v. 3727  v.  3094
+length(idx) ## 5098 v. 3727  v.  3094 v.  2567
 
 curlStatements=read.csv("curlStatements.csv",stringsAsFactors=F,header=F)
 
-writeLines(paste(curlStatements[idx,1],"v1.0/",filesToDownload[idx,1],sep=""), "curlToDo5.sh", sep = "\n", useBytes = FALSE)
+writeLines(paste(curlStatements[idx,1],"v1.0/",filesToDownload[idx,1],sep=""), "curlToDo6.sh", sep = "\n", useBytes = FALSE)
 
 ## test first line
 #curl -u NEXGDDP:"" -o tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1967.nc ftp://ftp.nccs.nasa.gov/BCSD/historical/day/atmos/tasmax/r1i1p1/v1.0/tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1967.nc
