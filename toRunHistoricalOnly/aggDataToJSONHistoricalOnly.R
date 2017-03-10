@@ -1,7 +1,7 @@
 ####### two summaries per tag #####
 
 ## set GitHub directory to read in some files
-gitHubDir=""
+gitHubDir="~/Desktop/UCB_DS421_NEX_partnerProject"
 setwd(gitHubDir)
 lon=read.csv("lon.csv",stringsAsFactors=F)
 lat=read.csv("lat.csv",stringsAsFactors=F)
@@ -18,8 +18,28 @@ quantAvgAllMaxTempHist=quantSDAllMaxTempHist=c()
 # quantAvgAllMinTemp85=quantSDAllMinTemp85=c()
 # quantAvgAllMaxTemp85=quantSDAllMaxTemp85=c()
 
+tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F)
+nex_climate_filenames <- read.table("nex_climate_filenames.txt", 
+                                    quote="\"", comment.char="") 
+
+filesPertagList=vector("list",nrow(tagList)) ## CHANGED FROM LENGTH TO NROW
 for(i in 1:nrow(tagList)){
-  
+  filesPertagList[[i]]=nex_climate_filenames[grepl(tagList[i,1],nex_climate_filenames[,1]),1]
+} ## get files per tag
+
+
+which(tagList[,1]=="MIROC-ESM-CHEM") ## 15
+require(ncdf4)
+require(RSvgDevice)
+require(RColorBrewer)
+require(maps)
+#### 
+
+
+yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
+
+#for(i in 1:nrow(tagList)){
+  i=15
   ## split by type of data
   
   prFileNames=filesPertagList[[i]][grepl("pr_",filesPertagList[[i]])]
@@ -40,7 +60,7 @@ for(i in 1:nrow(tagList)){
   #tempMaxFileNames_rcp45=tempMaxFileNames[grepl("rcp45",tempMaxFileNames)]
   #tempMaxFileNames_rcp85=tempMaxFileNames[grepl("rcp85",tempMaxFileNames)]
   
-  
+  ptm <- proc.time()
   prHistYr=array(0,c(1440,720,length(prFileNames_hist)))
   for(j in 1:length(prFileNames_hist)){
     ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/",prFileNames_hist[j],sep="")
@@ -85,6 +105,7 @@ for(i in 1:nrow(tagList)){
   lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
+  proc.time() - ptm
   
   # pr45Yr=array(0,c(1440,720,length(prFileNames_rcp45)))
   # for(j in 1:length(prFileNames_rcp45)){
@@ -567,5 +588,5 @@ for(i in 1:nrow(tagList)){
   print(paste("tag",i,sep=" "))
   
   
-}
+#}
 
