@@ -29,7 +29,7 @@ for(i in 1:length(stillToDownload)){
   idx=c(idx,which(filesToDownload==stillToDownload[i]))
   
 }
-length(idx) ## 5098 v. 3727  v.  3094 v.  2567
+length(idx) ## 5098 v. 3727  v.  3094 v.  2567 v. 1644
 
 curlStatements=read.csv("curlStatements.csv",stringsAsFactors=F,header=F)
 
@@ -98,4 +98,8 @@ table(leftToDo[which(leftToDo[,10]=="tasmin"),1])
 
 # no obvious pattern
 
+## do I have a full tag yet?
+sum(grepl("MIROC-ESM-CHEM",filesToDownload[idx,1]))
 
+filesToDownload[idx,1][which(grepl("MIROC-ESM-CHEM",filesToDownload[idx,1])==T)]
+## have all historical, just mising rcp85
