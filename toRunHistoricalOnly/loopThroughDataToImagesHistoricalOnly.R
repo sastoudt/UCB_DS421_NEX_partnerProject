@@ -14,7 +14,7 @@ tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F) ## get tagList for dif
 nex_climate_filenames <- read.table("nex_climate_filenames.txt", 
                                     quote="\"", comment.char="") ## get all file names
 
-filesPertagList=vector("list",length(tagList))
+filesPertagList=vector("list",nrow(tagList))
 for(i in 1:nrow(tagList)){
   filesPertagList[[i]]=nex_climate_filenames[grepl(tagList[i,1],nex_climate_filenames[,1]),1]
 } ## get files per tag

@@ -6,4 +6,4 @@ loopThroughDataToImagesHistoricalOnly.R (make figures for daily slider, note opt
 
 aggDataToJSONHistoricalOnly.R [make data for trend viz (big csv: lat, lon, color code)]
 
-pathToData: right before rawdata and include a slash
+pathToData: right before rawdata and don't include a slash
