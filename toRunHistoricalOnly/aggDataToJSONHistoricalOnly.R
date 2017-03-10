@@ -311,6 +311,8 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
   # nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmin/","aggResults.csv",sep="")
   # write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   # 
+  
+  ##START HERE, WRITE OVER
   ptm <- proc.time()
   tempMaxHistYr=array(0,c(1440,720,length(tempMaxFileNames_hist)))
   
@@ -354,7 +356,12 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
   lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
-  proc.time() - ptm
+  proc.time() - ptm ##  2332.333 almost 40 minutes
+  
+  quantPr=read.csv(paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/","aggResults.csv",sep=""))
+  quantMinTemp=read.csv(paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/","aggResults.csv",sep=""))
+  quantMaxTemp=read.csv(paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/","aggResults.csv",sep=""))
+  
   
   # tempMax45HistYr=array(0,c(1440,720,length(tempMaxFileNames_rcp45)))
   # 
@@ -432,9 +439,9 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
   # write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   # 
   #
-  print(paste("tag",i,sep=" "))
+#  print(paste("tag",i,sep=" "))
   
-}
+#}
 
 ## save quantiles for aggregation to GitHub folder
 gitHubDir=""
@@ -472,15 +479,32 @@ require(RColorBrewer)
 require(R2BayesX)
 library(RSvgDevice)
 
-for(i in 1:nrow(tagList)){
+## below needed or this test only
+# quantAvgAllPrHist=quantSDAllPrHist=quantAvgAllMinTempHist=quantSDAllMinTempHist=quantAvgAllMaxTempHist=quantSDAllMaxTempHist=matrix(NA,ncol=11,nrow=2)
+# 
+# quantAvgAllPrHist[1,]=quantile(quantPr$avgDiff,seq(0,1,by=.1),na.rm=T)
+# quantSDAllPrHist[1,]=quantile(quantPr$sdDiff,seq(0,1,by=.1),na.rm=T)
+# 
+# quantAvgAllMinTempHist[1,]=quantile(quantMinTemp$avgDiff,seq(0,1,by=.1),na.rm=T)
+# quantSDAllMinTempHist[1,]=quantile(quantMinTemp$sdDiff,seq(0,1,by=.1),na.rm=T)
+# 
+# quantAvgAllMaxTempHist[1,]=quantile(quantMaxTemp$avgDiff,seq(0,1,by=.1),na.rm=T)
+# quantSDAllMaxTempHist[1,]=quantile(quantMaxTemp$sdDiff,seq(0,1,by=.1),na.rm=T)
+
+#i=15
+
+#for(i in 1:nrow(tagList)){
   toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep="")
   setwd(toSavePath)
   imgName=paste(tagList[i,1],"_prHistLegendAggAvg.svg",sep="")
+  #i=1
   toPlot=quantAvgAllPrHist[i,]
   devSVG(file=imgName,width=12,height=4)
   colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
   dev.off()
+  #i=15
   imgName=paste(tagList[i,1],"_prHistLegendAggSD.svg",sep="")
+  #i=1
   toPlot=quantSDAllPrHist[i,]
   devSVG(file=imgName,width=12,height=4)
   colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
@@ -512,14 +536,18 @@ for(i in 1:nrow(tagList)){
   # colorlegend(color=c(brewer.pal(9,"Blues"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
   # dev.off()
   
+  #i=15
   toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
   setwd(toSavePath)
   imgName=paste(tagList[i,1],"_minTempHistLegendAggAvg.svg",sep="")
+  #i=1
   toPlot=quantAvgAllMinTempHist[i,]
   devSVG(file=imgName,width=12,height=4)
   colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
   dev.off()
+  #i=15
   imgName=paste(tagList[i,1],"_minTempHistLegendAggSD.svg",sep="")
+  #i=1
   toPlot=quantSDAllMinTempHist[i,]
   devSVG(file=imgName,width=12,height=4)
   colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
@@ -551,14 +579,18 @@ for(i in 1:nrow(tagList)){
   # colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
   # dev.off()
   
+  #i=15
   toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
   setwd(toSavePath)
   imgName=paste(tagList[i,1],"_maxTempHistLegendAggAvg.svg",sep="")
+  #i=1
   toPlot=quantAvgAllMaxTempHist[i,]
   devSVG(file=imgName,width=12,height=4)
   colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
   dev.off()
+  #i=15
   imgName=paste(tagList[i,1],"_maxTempHistLegendAggSD.svg",sep="")
+  #i=1
   toPlot=quantSDAllMaxTempHist[i,]
   devSVG(file=imgName,width=12,height=4)
   colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
@@ -589,8 +621,9 @@ for(i in 1:nrow(tagList)){
   # devSVG(file=imgName,width=12,height=4)
   # colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
   # dev.off()
-  print(paste("tag",i,sep=" "))
+#  print(paste("tag",i,sep=" "))
   
   
 #}
 
+  ## legends are cramped with labels, need to fix this
