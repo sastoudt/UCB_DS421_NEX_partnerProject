@@ -52,7 +52,7 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
   #prFileNames_rcp45=prFileNames[grepl("rcp45",prFileNames)]
   #prFileNames_rcp85=prFileNames[grepl("rcp85",prFileNames)]
   
-  tempMinNames_hist=tempMinFileNames[grepl("historical",tempMinFileNames)]
+  tempMinFileNames_hist=tempMinFileNames[grepl("historical",tempMinFileNames)]
   #tempMinFileNames_rcp45=tempMinFileNames[grepl("rcp45",tempMinFileNames)]
   #tempMinFileNames_rcp85=tempMinFileNames[grepl("rcp85",tempMinFileNames)]
   
@@ -82,11 +82,11 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
     
   }
   diffAcrossYears=apply(prHistYr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
   
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1))
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1))
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
   
   quantAvgAllPrHist=rbind(quantAvgAllPrHist,quantAvg)
   quantSDAllPrHist=rbind(quantSDAllPrHist,quantSD)
@@ -105,7 +105,7 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
   lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
-  proc.time() - ptm
+  proc.time() - ptm ## errored out after loop though 2044.132 (35 minutes ish)
   
   # pr45Yr=array(0,c(1440,720,length(prFileNames_rcp45)))
   # for(j in 1:length(prFileNames_rcp45)){
@@ -190,6 +190,7 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
   # nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/pr/","aggResults.csv",sep="")
   # write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   # 
+  ptm <- proc.time()
   tempMinHistYr=array(0,c(1440,720,length(tempMinFileNames_hist)))
   for(j in 1:length(tempMinFileNames_hist)){
     ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/",tempMinFileNames_hist[j],sep="")
@@ -209,8 +210,8 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
     
   }
   diffAcrossYears=apply(tempMinHistYr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd)   ## sd of differences between successive years
   quantAvg=quantile(c(avgDiff),seq(0,1,by=.1))
   quantSD=quantile(c(sdDiff),seq(0,1,by=.1))
   
@@ -231,7 +232,7 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
   lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
-  
+  proc.time() - ptm
   # tempMin45Yr=array(0,c(1440,720,length(tempMinFileNames_rcp45)))
   # for(j in 1:length(tempMinFileNames_rcp45)){
   #   ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmin/",tempMinFileNames_rcp45[j],sep="")
@@ -310,6 +311,7 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
   # nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmin/","aggResults.csv",sep="")
   # write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   # 
+  ptm <- proc.time()
   tempMaxHistYr=array(0,c(1440,720,length(tempMaxFileNames_hist)))
   
   for(j in 1:length(tempMaxFileNames_hist)){
@@ -330,8 +332,8 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
     
   }
   diffAcrossYears=apply(tempMaxHistYr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd)   ## sd of differences between successive years
   
   quantAvgAllMaxTempHist=rbind(quantAvgAllMaxTempHist,quantAvg)
   quantSDAllMaxTempHist=rbind(quantSDAllMaxTempHist,quantSD)
@@ -350,7 +352,7 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
   lonLatGridPlusValue$sdDiffCol=sdDiffCol
   nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
-  
+  proc.time() - ptm
   
   # tempMax45HistYr=array(0,c(1440,720,length(tempMaxFileNames_rcp45)))
   # 
