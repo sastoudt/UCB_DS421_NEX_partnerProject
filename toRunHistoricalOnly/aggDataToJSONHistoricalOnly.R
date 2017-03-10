@@ -210,10 +210,10 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
     
   }
   diffAcrossYears=apply(tempMinHistYr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(2,3),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(2,3),sd)   ## sd of differences between successive years
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1))
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1))
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
   
   quantAvgAllMinTempHist=rbind(quantAvgAllMinTempHist,quantAvg)
   quantSDAllMinTempHist=rbind(quantSDAllMinTempHist,quantSD)
@@ -332,8 +332,10 @@ yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
     
   }
   diffAcrossYears=apply(tempMaxHistYr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(2,3),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(2,3),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
   
   quantAvgAllMaxTempHist=rbind(quantAvgAllMaxTempHist,quantAvg)
   quantSDAllMaxTempHist=rbind(quantSDAllMaxTempHist,quantSD)

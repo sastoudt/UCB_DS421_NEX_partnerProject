@@ -108,8 +108,12 @@ write_json(miniSub,"testMini.json")
 
 library(jsonlite)
 library(ncdf4)
+#require(ncdf4)
+require(RSvgDevice)
+require(RColorBrewer)
+require(maps)
 
-
+## path before rawdata, no ending backslash
 yourPathToData=""
 wdGit="~/Desktop/UCB_DS421_NEX_partnerProject"
 setwd(wdGit)
@@ -119,7 +123,7 @@ tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F) ## get tagList for dif
 nex_climate_filenames <- read.table("nex_climate_filenames.txt", 
                                     quote="\"", comment.char="") ## get all file names
 
-filesPertagList=vector("list",length(tagList))
+filesPertagList=vector("list",nrow(tagList))
 for(i in 1:nrow(tagList)){
   filesPertagList[[i]]=nex_climate_filenames[grepl(tagList[i,1],nex_climate_filenames[,1]),1]
 } ## get files per tag
@@ -147,7 +151,7 @@ for(i in 1:nrow(tagList)){
   prFileNames_rcp45=prFileNames[grepl("rcp45",prFileNames)]
   prFileNames_rcp85=prFileNames[grepl("rcp85",prFileNames)]
   
-  tempMinNames_hist=tempMinFileNames[grepl("historical",tempMinFileNames)]
+  tempMinFileNames_hist=tempMinFileNames[grepl("historical",tempMinFileNames)]
   tempMinFileNames_rcp45=tempMinFileNames[grepl("rcp45",tempMinFileNames)]
   tempMinFileNames_rcp85=tempMinFileNames[grepl("rcp85",tempMinFileNames)]
   
@@ -372,10 +376,31 @@ apply(apply(test,c(1,2),diff),c(1,2),sd)   ## sd of differences between successi
 
 
 ####### two summaries per tag #####
-gitHubDir=""
-setwd(gitHubDir)
-lon=read.csv("lon.csv",stringsAsFactors=F)
-lat=read.csv("lat.csv",stringsAsFactors=F)
+
+require(ncdf4)
+require(RSvgDevice)
+require(RColorBrewer)
+require(maps)
+
+## path before rawdata, no ending backslash
+yourPathToData=""
+wdGit="~/Desktop/UCB_DS421_NEX_partnerProject"
+setwd(wdGit)
+
+tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F) ## get tagList for different models
+
+nex_climate_filenames <- read.table("nex_climate_filenames.txt", 
+                                    quote="\"", comment.char="") ## get all file names
+
+filesPertagList=vector("list",nrow(tagList))
+for(i in 1:nrow(tagList)){
+  filesPertagList[[i]]=nex_climate_filenames[grepl(tagList[i,1],nex_climate_filenames[,1]),1]
+} ## get files per tag
+
+
+lon=read.csv("lon.csv",stringsAsFactors=F)[,1]
+lat=read.csv("lat.csv",stringsAsFactors=F)[,1]
+
 lonLatGrid=expand.grid(lon[,1],lat[,1])
 quantAvgAllPrHist=quantSDAllPrHist=c()
 quantAvgAllMinTempHist=quantSDAllMinTempHist=c()
@@ -403,7 +428,7 @@ for(i in 1:nrow(tagList)){
   prFileNames_rcp45=prFileNames[grepl("rcp45",prFileNames)]
   prFileNames_rcp85=prFileNames[grepl("rcp85",prFileNames)]
   
-  tempMinNames_hist=tempMinFileNames[grepl("historical",tempMinFileNames)]
+  tempMinFileNames_hist=tempMinFileNames[grepl("historical",tempMinFileNames)]
   tempMinFileNames_rcp45=tempMinFileNames[grepl("rcp45",tempMinFileNames)]
   tempMinFileNames_rcp85=tempMinFileNames[grepl("rcp85",tempMinFileNames)]
   
@@ -422,9 +447,9 @@ for(i in 1:nrow(tagList)){
     ## need to double check for tmax, tmin, see what they are called
     nc_close(ncin)
     
-    toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep="")
-    imgName=paste(prFileNames_hist[j],"_yearMean",".json",sep="")
-    setwd(toSavePath)
+    #toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep="")
+    #imgName=paste(prFileNames_hist[j],"_yearMean",".json",sep="")
+    #setwd(toSavePath)
     
     oneDay=apply(precipHist,c(1,2),mean,na.rm=T)
     
@@ -432,11 +457,11 @@ for(i in 1:nrow(tagList)){
     
   }
   diffAcrossYears=apply(prHistYr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
   
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1))
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1))
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
   
   quantAvgAllPrHist=rbind(quantAvgAllPrHist,quantAvg)
   quantSDAllPrHist=rbind(quantSDAllPrHist,quantSD)
@@ -463,9 +488,9 @@ for(i in 1:nrow(tagList)){
     precip45 <- ncvar_get(ncin,"pr")
     nc_close(ncin)
     
-    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/pr/",sep="")
-    imgName=paste(prFileNames_rcp45[j],"_yearMean",".json",sep="")
-    setwd(toSavePath)
+    #toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/pr/",sep="")
+    #imgName=paste(prFileNames_rcp45[j],"_yearMean",".json",sep="")
+    #setwd(toSavePath)
     
     oneDay=apply(precip45,c(1,2),mean,na.rm=T)
     
@@ -473,11 +498,11 @@ for(i in 1:nrow(tagList)){
     
   }
   diffAcrossYears=apply(pr45Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
   
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1))
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1))
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
   
   quantAvgAllPr45=rbind(quantAvgAllPr45,quantAvg)
   quantSDAllPr45=rbind(quantSDAllPr45,quantSD)
@@ -505,9 +530,9 @@ for(i in 1:nrow(tagList)){
     nc_close(ncin)
     
     
-    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/pr/",sep="")
-    imgName=paste(prFileNames_rcp85[j],"_yearMean",".json",sep="")
-    setwd(toSavePath)
+    #toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/pr/",sep="")
+    #imgName=paste(prFileNames_rcp85[j],"_yearMean",".json",sep="")
+    #setwd(toSavePath)
     ## make image
     oneDay=apply(precip85,c(1,2),mean,na.rm=T)
     
@@ -515,11 +540,11 @@ for(i in 1:nrow(tagList)){
     
   }
   diffAcrossYears=apply(pr85Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
   
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1))
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1))
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
   
   quantAvgAllPr85=rbind(quantAvgAllPr85,quantAvg)
   quantSDAllPr85=rbind(quantSDAllPr85,quantSD)
@@ -547,9 +572,9 @@ for(i in 1:nrow(tagList)){
     
     nc_close(ncin)
     
-    toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
-    imgName=paste(tempMinFileNames_hist[j],"yearMean",".json",sep="")
-    setwd(toSavePath)
+    #toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
+    #imgName=paste(tempMinFileNames_hist[j],"yearMean",".json",sep="")
+    #setwd(toSavePath)
     
     oneDay=apply(tempMinHist,c(1,2),mean,na.rm=T)
     
@@ -557,10 +582,10 @@ for(i in 1:nrow(tagList)){
     
   }
   diffAcrossYears=apply(tempMinHistYr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1))
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1))
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
   
   quantAvgAllMinTempHist=rbind(quantAvgAllMinTempHist,quantAvg)
   quantSDAllMinTempHist=rbind(quantSDAllMinTempHist,quantSD)
@@ -589,17 +614,19 @@ for(i in 1:nrow(tagList)){
     nc_close(ncin)
     
     
-    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmin/",sep="")
-    imgName=paste(tempMinFileNames_rcp45[j],"yearMean",".json",sep="")
-    setwd(toSavePath)
+    #toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmin/",sep="")
+    #imgName=paste(tempMinFileNames_rcp45[j],"yearMean",".json",sep="")
+    #setwd(toSavePath)
     oneDay=apply(tempMin45,c(1,2),mean,na.rm=T)
     
     tempMin45Yr[,,j]=oneDay
     
   }
   diffAcrossYears=apply(tempMin45Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
   
   quantAvgAllMinTemp45=rbind(quantAvgAllMinTemp45,quantAvg)
   quantSDAllMinTemp45=rbind(quantSDAllMinTemp45,quantSD)
@@ -628,17 +655,19 @@ for(i in 1:nrow(tagList)){
     nc_close(ncin)
     
     
-    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmin/",sep="")
-    imgName=paste(tempMinFileNames_rcp85[j],"yearMean",".json",sep="")
-    setwd(toSavePath)
+    #toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmin/",sep="")
+    #imgName=paste(tempMinFileNames_rcp85[j],"yearMean",".json",sep="")
+    #setwd(toSavePath)
     oneDay=apply(tempMin85,c(1,2),mean,na.rm=T)
     
     tempMin85Yr[,,j]=oneDay
     
   }
   diffAcrossYears=apply(tempMin85Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
   
   quantAvgAllMinTemp85=rbind(quantAvgAllMinTemp85,quantAvg)
   quantSDAllMinTemp85=rbind(quantSDAllMinTemp85,quantSD)
@@ -667,9 +696,9 @@ for(i in 1:nrow(tagList)){
     ## need to do for tmax, tmin, see what they are called
     nc_close(ncin)
     
-    toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
-    imgName=paste(tempMaxFileNames_hist[j],"yearMean",".json",sep="")
-    setwd(toSavePath)
+    #toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
+    #imgName=paste(tempMaxFileNames_hist[j],"yearMean",".json",sep="")
+    #setwd(toSavePath)
     ## make image
     oneDay=apply(tempMaxHist,c(1,2),mean,na.rm=T)
     
@@ -677,8 +706,10 @@ for(i in 1:nrow(tagList)){
     
   }
   diffAcrossYears=apply(tempMaxHistYr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
   
   quantAvgAllMaxTempHist=rbind(quantAvgAllMaxTempHist,quantAvg)
   quantSDAllMaxTempHist=rbind(quantSDAllMaxTempHist,quantSD)
@@ -708,16 +739,20 @@ for(i in 1:nrow(tagList)){
     ## need to do for tmax, tmin, see what they are called
     nc_close(ncin)
     
-    toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmax/",sep="")
-    imgName=paste(tempMaxFileNames_rcp45[j],"yearMean",".json",sep="")
-    setwd(toSavePath)
+    #toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmax/",sep="")
+    #imgName=paste(tempMaxFileNames_rcp45[j],"yearMean",".json",sep="")
+    #setwd(toSavePath)
     oneDay=apply(tempMax45,c(1,2),mean,na.rm=T)
     tempMax45Yr[,,j]=oneDay
     
   }
   diffAcrossYears=apply(tempMax45Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
+  
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
+  
   quantAvgAllMaxTemp45=rbind(quantAvgAllMaxTemp45,quantAvg)
   quantSDAllMaxTemp45=rbind(quantSDAllMaxTemp45,quantSD)
   
@@ -745,17 +780,22 @@ for(i in 1:nrow(tagList)){
     ## need to do for tmax, tmin, see what they are called
     nc_close(ncin)
     
-    toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmax/",sep="")
-    imgName=paste(tempMaxFileNames_rcp85[j],"yearMean",".json",sep="")
-    setwd(toSavePath)
+    #toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmax/",sep="")
+    #imgName=paste(tempMaxFileNames_rcp85[j],"yearMean",".json",sep="")
+    #setwd(toSavePath)
     oneDay=apply(tempMax85,c(1,2),mean,na.rm=T)
     
     tempMax85Yr[,,j]=oneDay
     
   }
   diffAcrossYears=apply(tempMax85Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(1,2),mean) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(1,2),sd)   ## sd of differences between successive years
+  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
+  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
+  
+  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
+  
+  
   quantAvgAllMaxTemp85=rbind(quantAvgAllMaxTemp85,quantAvg)
   quantSDAllMaxTemp85=rbind(quantSDAllMaxTemp85,quantSD)
   
