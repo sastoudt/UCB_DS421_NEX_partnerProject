@@ -485,3 +485,4 @@ write.csv(quantileMaxTempHist,"quantileFromAllDataMaxTempHist.csv",row.names=F)
 #write.csv(quantileMaxTemp45,"quantileFromAllDataMaxTemp45.csv",row.names=F)
 #write.csv(quantileMaxTemp85,"quantileFromAllDataMaxTemp85.csv",row.names=F)
 
+##  201.0289 248.721 263.2808 269.6444 275.2184 280.6051 285.6355 289.3692 293.0002 299.4774 333.8769
