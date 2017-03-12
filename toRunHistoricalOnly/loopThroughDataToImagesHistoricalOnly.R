@@ -71,10 +71,11 @@ minTempHistBreak=read.csv("minTempHistBreak.csv",stringsAsFactors=F)
 #minTemp85Break=read.csv("minTemp85Break.csv",stringsAsFactors=F)
 
 maxTempHistBreak=read.csv("maxTempHistBreak.csv",stringsAsFactors=F)
+breaksAllMaxTemp=c(238.1236, 252.4237, 260.7205, 268.3477, 274.6672, 280.4095, 285.7682, 290.0989, 292.9525, 299.6218, 311.6947)
 #maxTemp45Break=read.csv("maxTemp45Break.csv",stringsAsFactors=F)
 #maxTemp85Break=read.csv("maxTemp85Break.csv",stringsAsFactors=F)
 
-makePNG=F ## false means it will make an SVG
+makePNG=T ## false means it will make an SVG
 
 # if(makePNG){
 #   imgName=paste(prFileNames_hist[j],"day",k,".png",sep="")
@@ -93,8 +94,8 @@ quantilePrHistTemporary=quantilePr45Temporary=quantilePr85Temporary=quantileMinT
   quantileMaxTemp85Temporary=c()
 
 ## since looping over tagList, can easily run the code for only our half
-for(i in 1:nrow(tagList)){
-  
+#for(i in 1:nrow(tagList)){
+i=15  
   ## split by type of data
   
   prFileNames=filesPertagList[[i]][grepl("pr_",filesPertagList[[i]])]
@@ -317,7 +318,7 @@ for(i in 1:nrow(tagList)){
   #     dev.off()
   #   }
   # }
-  
+  ptm <- proc.time()
   for(j in 1:length(tempMaxFileNames_hist)){
     ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/",tempMaxFileNames_hist[j],sep="")
     ncin <- nc_open(ncname)
@@ -352,6 +353,7 @@ for(i in 1:nrow(tagList)){
     print(paste("max temp file",j,sep=" "))
     
   }
+  proc.time() - ptm
   # 
   # for(j in 1:length(tempMaxFileNames_rcp45)){
   #   ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp45[j],sep="")
