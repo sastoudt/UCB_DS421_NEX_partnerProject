@@ -579,6 +579,10 @@ library(RSvgDevice)
   # colorlegend(color=c("black",rev(brewer.pal(9,"Purples"))),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
   # dev.off()
   
+  setwd("/Volumes/Sara_5TB/NEX/rawdata/historical/MIROC-ESM-CHEM/tasmax/")
+  aggResults=read.csv("aggResults.csv",stringsAsFactors=F)
+  
+  toPlot=quantile(aggResults$avgDiff,seq(0,1,by=.1),na.rm=T)
   #i=15
   toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
   setwd(toSavePath)
@@ -586,7 +590,8 @@ library(RSvgDevice)
   #i=1
   toPlot=quantAvgAllMaxTempHist[i,]
   devSVG(file=imgName,width=12,height=4)
-  colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=10,symmetric=F)
+  colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=3,symmetric=F)
+  text(1:11,1,"test")
   dev.off()
   #i=15
   imgName=paste(tagList[i,1],"_maxTempHistLegendAggSD.svg",sep="")
