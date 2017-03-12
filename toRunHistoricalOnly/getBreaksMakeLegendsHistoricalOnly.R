@@ -7,7 +7,7 @@
 library(ncdf4)
 ## per tag and type
 
-yourPathToData=""
+yourPathToData="/Volumes/Sara_5TB/NEX"
 
 setwd("~/Desktop/UCB_DS421_NEX_partnerProject/")
 
@@ -24,9 +24,12 @@ for(i in 1:nrow(tagList)){
 
 
 prHistBreak=pr45Break=pr85Break=minTempHistBreak=minTemp45Break=minTemp85Break=
-  maxTempHistBreak=maxTemp45Break=maxTemp85Break=matrix(0,nrow=length(tagList),ncol=11)
-for(i in 1:nrow(tagList)){
-  
+  maxTempHistBreak=maxTemp45Break=maxTemp85Break=matrix(0,nrow=nrow(tagList),ncol=11)
+
+which(tagList[,1]=="MIROC-ESM-CHEM") ## 15
+
+#for(i in 1:nrow(tagList)){
+  i=15
   ## split by type of data
   
   prFileNames=filesPertagList[[i]][grepl("pr_",filesPertagList[[i]])]
@@ -62,16 +65,16 @@ for(i in 1:nrow(tagList)){
   
   quants<-c()
   for(k in 1:length(subSampPrHist)){
-    ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/",prFileNames_hist[k],sep="")
+    ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/",prFileNames_hist[subSampPrHist[k]],sep="")
     ncin <- nc_open(ncname)
     precipHist <- ncvar_get(ncin,"pr")
     nc_close(ncin)
     
-    test=apply(precipHist,c(1,2),mean)
-    quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+    test=apply(precipHist,c(1,2),mean,na.rm=T)
+    quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
     print(paste("precip",k,sep=" "))
   }
-  prHistBreak[i,]=apply(quants,2,mean)
+  prHistBreak[i,]=apply(quants,2,mean,na.rm=T)
   
   #quants<-c()
   # for(k in 1:length(subSampPr45)){
@@ -101,17 +104,17 @@ for(i in 1:nrow(tagList)){
   
   quants<-c()
   for(k in 1:length(subSampMinTempHist)){
-    ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/",tempMinFileNames_hist[j],sep="")
+    ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/",tempMinFileNames_hist[subSampMinTempHist[k]],sep="")
     ncin <- nc_open(ncname)
     tempMinHist <- ncvar_get(ncin,"tasmin")
     nc_close(ncin)
     
-    test=apply(tempMinHist,c(1,2),mean)
-    quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+    test=apply(tempMinHist,c(1,2),mean,na.rm=T)
+    quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
     print(paste("min temp",k,sep=" "))
     
   }
-  minTempHistBreak[i,]=apply(quants,2,mean)
+  minTempHistBreak[i,]=apply(quants,2,mean,na.rm=T)
   
   # quants<-c()
   # for(k in 1:length(subSampMinTemp45)){
@@ -138,21 +141,26 @@ for(i in 1:nrow(tagList)){
   # minTemp85Break[i,]=apply(quants,2,mean)
   # ##
   
+  ### just do max temp for one tag for now, I think max temp will make the nicest pictures for the proof of concept
+  ptm <- proc.time()
   quants<-c()
   for(k in 1:length(subSampMaxTempHist)){
-    ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/",tempMaxFileNames_hist[j],sep="")
+    
+   
+    ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/",tempMaxFileNames_hist[ subSampMaxTempHist[k]],sep="")
     ncin <- nc_open(ncname)
     tempMaxHist <- ncvar_get(ncin,"tasmax")
     nc_close(ncin)
     
-    test=apply(tempMaxHist,c(1,2),mean)
-    quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+    test=apply(tempMaxHist,c(1,2),mean,na.rm=T)
+    quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
     print(paste("max temp",k,sep=" "))
     
   }
-  maxTempHistBreak[i,]=apply(quants,2,mean)
-  
-  
+  maxTempHistBreak[i,]=apply(quants,2,mean,na.rm=T)
+  proc.time() - ptm ## 502.867 
+  ## 238.1236 252.4237 260.7205 268.3477 274.6672 280.4095 285.7682 290.0989 292.9525 299.6218 311.6947
+  #c(238.1236, 252.4237, 260.7205, 268.3477, 274.6672, 280.4095, 285.7682, 290.0989, 292.9525, 299.6218, 311.6947)
 #   quants<-c()
 #   for(k in 1:length(subSampMaxTemp45)){
 #     ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp45[j],sep="")

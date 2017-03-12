@@ -62,116 +62,116 @@ for(i in 1:nrow(tagList)){
   
   quants<-c()
   for(k in 1:length(subSampPrHist)){
-  ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/",prFileNames_hist[k],sep="")
+  ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/",prFileNames_hist[subSampPrHist[k]],sep="")
   ncin <- nc_open(ncname)
   precipHist <- ncvar_get(ncin,"pr")
   nc_close(ncin)
   
-  test=apply(precipHist,c(1,2),mean)
-  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+  test=apply(precipHist,c(1,2),mean,na.rm=T)
+  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
   }
-  prHistBreak[i,]=apply(quants,2,mean)
+  prHistBreak[i,]=apply(quants,2,mean,na.rm=T)
   
   quants<-c()
   for(k in 1:length(subSampPr45)){
-  ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/pr/",prFileNames_rcp45[k],sep="")
+  ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/pr/",prFileNames_rcp45[subSampPr45[k]],sep="")
   ncin <- nc_open(ncname)
   precip45 <- ncvar_get(ncin,"pr")
   nc_close(ncin)
   
-  test=apply(precip45,c(1,2),mean)
-  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+  test=apply(precip45,c(1,2),mean,na.rm=T)
+  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
   }
-  pr45Break[i,]=apply(quants,2,mean)
+  pr45Break[i,]=apply(quants,2,mean,na.rm=T)
   
   quants<-c()
   for(k in 1:length(subSampPr85)){
-  ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/pr/",prFileNames_rcp85[k],sep="")
+  ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/pr/",prFileNames_rcp85[subSampPr85[k]],sep="")
   ncin <- nc_open(ncname)
   precip85 <- ncvar_get(ncin,"pr")
   nc_close(ncin)
   
-  test=apply(precip85,c(1,2),mean)
-  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+  test=apply(precip85,c(1,2),mean,na.rm=T)
+  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
   }
-  pr85Break[i,]=apply(quants,2,mean)
+  pr85Break[i,]=apply(quants,2,mean,na.rm=T)
   
   ##
   
   quants<-c()
   for(k in 1:length(subSampMinTempHist)){
-  ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/",tempMinFileNames_hist[j],sep="")
+  ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/",tempMinFileNames_hist[subSampMinTempHist[k]],sep="")
   ncin <- nc_open(ncname)
   tempMinHist <- ncvar_get(ncin,"tasmin")
   nc_close(ncin)
   
-  test=apply(tempMinHist,c(1,2),mean)
-  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+  test=apply(tempMinHist,c(1,2),mean,na.rm=T)
+  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
   }
-  minTempHistBreak[i,]=apply(quants,2,mean)
+  minTempHistBreak[i,]=apply(quants,2,mean,na.rm=T)
   
   quants<-c()
   for(k in 1:length(subSampMinTemp45)){
-  ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmin/",tempMinFileNames_rcp45[j],sep="")
+  ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmin/",tempMinFileNames_rcp45[subSampMinTemp45[k]],sep="")
   ncin <- nc_open(ncname)
   tempMin45 <- ncvar_get(ncin,"tasmin")
   nc_close(ncin)
   
-  test=apply(tempMin45,c(1,2),mean)
-  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+  test=apply(tempMin45,c(1,2),mean,na.rm=T)
+  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
   }
-  minTemp45Break[i,]=apply(quants,2,mean)
+  minTemp45Break[i,]=apply(quants,2,mean,na.rm=T)
   
   quants<-c()
   for(k in 1:length(subSampMinTemp85)){
-  ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmin/",tempMinFileNames_rcp85[j],sep="")
+  ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmin/",tempMinFileNames_rcp85[subSampMinTemp85[k]],sep="")
   ncin <- nc_open(ncname)
   tempMin85 <- ncvar_get(ncin,"tasmin")
   nc_close(ncin)
   
-  test=apply(tempMin85,c(1,2),mean)
-  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+  test=apply(tempMin85,c(1,2),mean,na.rm=T)
+  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
   }
-  minTemp85Break[i,]=apply(quants,2,mean)
+  minTemp85Break[i,]=apply(quants,2,mean,na.rm=T)
   ##
   
   quants<-c()
   for(k in 1:length(subSampMaxTempHist)){
-  ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/",tempMaxFileNames_hist[j],sep="")
+  ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/",tempMaxFileNames_hist[subSampMaxTempHist[k]],sep="")
   ncin <- nc_open(ncname)
   tempMaxHist <- ncvar_get(ncin,"tasmax")
   nc_close(ncin)
   
-  test=apply(tempMaxHist,c(1,2),mean)
-  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+  test=apply(tempMaxHist,c(1,2),mean,na.rm=T)
+  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
   
   }
-  maxTempHistBreak[i,]=apply(quants,2,mean)
+  maxTempHistBreak[i,]=apply(quants,2,mean,na.rm=T)
   
   
   quants<-c()
   for(k in 1:length(subSampMaxTemp45)){
-  ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp45[j],sep="")
+  ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp45[subSampMaxTemp45[k]],sep="")
   ncin <- nc_open(ncname)
   tempMax45 <- ncvar_get(ncin,"tasmax")
   nc_close(ncin)
   
-  test=apply(tempMax45,c(1,2),mean)
-  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+  test=apply(tempMax45,c(1,2),mean,na.rm=T)
+  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
   }
-  maxTemp45Break[i,]=apply(quants,2,mean)
+  maxTemp45Break[i,]=apply(quants,2,mean,na.rm=T)
   
   quants<-c()
   for(k in 1:length(subSampMaxTemp85)){
-  ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp85[j],sep="")
+  ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp85[subSampMaxTemp85[k]],sep="")
   ncin <- nc_open(ncname)
   tempMax85 <- ncvar_get(ncin,"tasmax")
   nc_close(ncin)
   
-  test=apply(tempMax85,c(1,2),mean)
-  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1))))
+  test=apply(tempMax85,c(1,2),mean,na.rm=T)
+  quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
   }
-  maxTemp85Break[i,]=apply(quants,2,mean)
+  maxTemp85Break[i,]=apply(quants,2,mean,na.rm=T)
 }
 
 gitHubWD=""
