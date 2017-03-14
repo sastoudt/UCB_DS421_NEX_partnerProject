@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta property="og:title" content="Rotate the World">
+<meta property="og:description" content="Interactive geographic projections.">
+<meta property="og:image" content="https://www.jasondavies.com/maps/rotate/full.png">
+<title>Rotate the World</title>
+<style>
+@import url(/Users/jennabaughman/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/rotate/maps.css);
+
+#map {
+  width: 1000px;
+  margin: 0 auto;
+}
+
+#map h1 {
+  position: absolute;
+  width: 1000px;
+}
+
+.foreground {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1px;
+  pointer-events: all;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+}
+
+.foreground.zooming {
+  cursor: -webkit-grabbing;
+  cursor: -moz-grabbing;
+}
+
+.graticule {
+  fill: none;
+  stroke: #636B62;
+  stroke-width: .5px;
+  stroke-dasharray: 2,2;
+}
+
+.land {
+  fill: #69D2E7;
+  stroke: none;
+}
+
+.mesh {
+  stroke: #50576A;
+  stroke-width: .5px;
+  fill: none;
+}
+
+.point {
+  fill: #f00;
+}
+
+</style>
+
+<p class="breadcrumbs">
+
+<div id="map">
+  <h1>ERF</h1>
+</div>
+<p class="caption">Drag to rotate the world.  Scroll or pinch to zoom.
+
+<script src="/Users/jennabaughman/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/rotate/d3.min.js"></script>
+<script src="/Users/jennabaughman/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/rotate/d3.geo.projection.min.js"></script>
+<script src="/Users/jennabaughman/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/rotate/topojson.min.js"></script>
+<script src="/Users/jennabaughman/Documents/berkeley/ds421/nasa/UCB_DS421_NEX_partnerProject/rotate/app.min.js"></script>
+</body></html>
