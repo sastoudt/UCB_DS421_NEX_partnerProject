@@ -401,7 +401,7 @@ for(i in 1:nrow(tagList)){
 lon=read.csv("lon.csv",stringsAsFactors=F)[,1]
 lat=read.csv("lat.csv",stringsAsFactors=F)[,1]
 
-lonLatGrid=expand.grid(lon[,1],lat[,1])
+lonLatGrid=expand.grid(lon,lat)
 quantAvgAllPrHist=quantSDAllPrHist=c()
 quantAvgAllMinTempHist=quantSDAllMinTempHist=c()
 quantAvgAllMaxTempHist=quantSDAllMaxTempHist=c()
@@ -413,7 +413,7 @@ quantAvgAllMaxTemp45=quantSDAllMaxTemp45=c()
 quantAvgAllPr85=quantSDAllPr85=c()
 quantAvgAllMinTemp85=quantSDAllMinTemp85=c()
 quantAvgAllMaxTemp85=quantSDAllMaxTemp85=c()
-
+i=15
 for(i in 1:nrow(tagList)){
   
   ## split by type of data
@@ -436,7 +436,7 @@ for(i in 1:nrow(tagList)){
   tempMaxFileNames_rcp45=tempMaxFileNames[grepl("rcp45",tempMaxFileNames)]
   tempMaxFileNames_rcp85=tempMaxFileNames[grepl("rcp85",tempMaxFileNames)]
   
-  
+  ptm <- proc.time()
   prHistYr=array(0,c(1440,720,length(prFileNames_hist)))
   for(j in 1:length(prFileNames_hist)){
     ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/",prFileNames_hist[j],sep="")
@@ -454,8 +454,9 @@ for(i in 1:nrow(tagList)){
     oneDay=apply(precipHist,c(1,2),mean,na.rm=T)
     
     prHistYr[,,j]=oneDay
-    
+    print(j)
   }
+  proc.time() - ptm ## 1943.559 ## about 35 minutes all NAs? each data file is a grid of NAs
   diffAcrossYears=apply(prHistYr,c(1,2),diff)
   avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
   sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
@@ -688,7 +689,7 @@ for(i in 1:nrow(tagList)){
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
   tempMaxHistYr=array(0,c(1440,720,length(tempMaxFileNames_hist)))
-  
+  ptm <- proc.time()
   for(j in 1:length(tempMaxFileNames_hist)){
     ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/",tempMaxFileNames_hist[j],sep="")
     ncin <- nc_open(ncname)
@@ -703,19 +704,32 @@ for(i in 1:nrow(tagList)){
     oneDay=apply(tempMaxHist,c(1,2),mean,na.rm=T)
     
     tempMaxHistYr[,,j]=oneDay
-    
+    print(j)
   }
+  proc.time() - ptm ## 2741.494 ## 45 minutes
   diffAcrossYears=apply(tempMaxHistYr,c(1,2),diff)
   avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
   sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
   quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
+  #0%          10%          20%          30%          40%          50%          60%          70%          80% 
+  #-0.068202411 -0.006062361  0.002386491  0.007871585  0.011943221  0.016031125  0.020668690  0.026385084  0.034669317 
+  #90%         100% 
+  #  0.051657164  0.133763378 
   quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
+  # 0%       10%       20%       30%       40%       50%       60%       70%       80%       90%      100% 
+  #0.1761529 0.4663317 0.5432861 0.6078010 0.6763409 0.7639354 0.8753163 0.9821325 1.1092197 1.2822268 2.1060257 
   
   quantAvgAllMaxTempHist=rbind(quantAvgAllMaxTempHist,quantAvg)
   quantSDAllMaxTempHist=rbind(quantSDAllMaxTempHist,quantSD)
   
   avgDiffCol=cut(c(avgDiff),quantAvg)
   sdDiffCol=cut(c(sdDiff),quantSD)
+  col=c(brewer.pal(9,"YlOrRd"),"black")
+  testCol=col[as.numeric(avgDiffCol)]
+  testCol[is.na(testCol)]="purple"
+  
+  testCol2=col[as.numeric(sdDiffCol)]
+  testCol2[is.na(testCol2)]="purple"
   
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
@@ -724,8 +738,8 @@ for(i in 1:nrow(tagList)){
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
-  lonLatGridPlusValue$avgDiffCol=avgDiffCol
-  lonLatGridPlusValue$sdDiffCol=sdDiffCol
+  lonLatGridPlusValue$avgDiffCol=as.character(testCol)
+  lonLatGridPlusValue$sdDiffCol=as.character(testCol2)
   nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
