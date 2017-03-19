@@ -1,3 +1,4 @@
+require(RColorBrewer)
 ## run getBreaksMakeLegendsHistoricalOnly.R to get breakpoints for precip and min temp
 
 ## try this out for max temp and time
@@ -19,7 +20,8 @@ quantAvgAllMinTempHist=quantSDAllMinTempHist=c()
 quantAvgAllMaxTempHist=quantSDAllMaxTempHist=c()
 
 maxTempBreaks=c(238.1236, 252.4237, 260.7205, 268.3477, 274.6672, 280.4095, 285.7682, 290.0989, 292.9525, 299.6218, 311.6947)
-maxTempBreaks=maxTempBreaks[-1]
+#maxTempBreaks=maxTempBreaks[-1]
+## one more break than color
 maxTempCol=c(brewer.pal(9,"YlOrRd"),"black")
 
 tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F)
@@ -145,7 +147,7 @@ for(j in 1:length(tempMinFileNames_hist)){
   print(paste("min temp file",j,sep=" "))
   
 }
-
+makePNG=T
 ptm <- proc.time()
 #tempMaxHistYr=array(0,c(1440,720,length(tempMaxFileNames_hist)))
 
@@ -161,13 +163,18 @@ for(j in 1:length(tempMaxFileNames_hist)){
   setwd(toSavePath)
   ## make image
   oneDay=apply(tempMaxHist,c(1,2),mean,na.rm=T)
-  
+  oneDay[is.na(oneDay)]=0
+  oneDay[is.nan(oneDay)]=0
+  #summary(c(oneDay))
+  maxTempBreaks=c(-1,maxTempBreaks)
+  maxTempCol=c("purple",maxTempCol)
   toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
   #imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
   setwd(toSavePath)
   ## make image
-  year=substr(tempMaxFileNames_hist[j],nchar(as.character(tempMaxFileNames_hist[j]))-11,nchar(as.character(tempMaxFileNames_hist[j]))-8)
-  
+  year=  substr(tempMaxFileNames_hist[j],nchar(as.character(tempMaxFileNames_hist[j]))-6,nchar(as.character(tempMaxFileNames_hist[j]))-3)
+
+    #substr(tempMaxFileNames_hist[j],nchar(as.character(tempMaxFileNames_hist[j]))-11,nchar(as.character(tempMaxFileNames_hist[j]))-8)
   
   if(makePNG){
     imgName=paste(tempMaxFileNames_hist[j],"mean",".png",sep="")
@@ -177,14 +184,16 @@ for(j in 1:length(tempMaxFileNames_hist)){
     devSVG(file=imgName,width=10,height=8)
   }
   
-  test=image(lon-180, lat, oneDay,breaks=maxTempBreaks,col=maxTempCol,sub=paste("historical ",tagList[i,1]),main=paste("Max Temp",year),xlab="lat",ylab="lon")
+  #maxTempBreaks=c(maxTempBreaks,max(c(oneDay)))
+  #maxTempCol=c(maxTempCol,"grey")
+  test=image(lon[,1]-180, lat[,1], oneDay,breaks=maxTempBreaks,col=maxTempCol,sub=paste("historical ",tagList[i,1]),main=paste("Max Temp",year),xlab="lat",ylab="lon")
   map("world",add=T) ## + key
   dev.off()
   
   print(paste("max temp file",j,sep=" "))
   
 }
-
+proc.time() - ptm ## 3130.861 almost an hour
 ##### make legends ####
 
 require(RColorBrewer)
