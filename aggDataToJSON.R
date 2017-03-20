@@ -469,6 +469,12 @@ for(i in 1:nrow(tagList)){
   
   avgDiffCol=cut(c(avgDiff),quantAvg)
   sdDiffCol=cut(c(sdDiff),quantSD)
+  col=c(brewer.pal(9,"Blues"),"black")
+  testCol=col[as.numeric(avgDiffCol)]
+  testCol[is.na(testCol)]="red"
+  
+  testCol2=col[as.numeric(sdDiffCol)]
+  testCol2[is.na(testCol2)]="red"
   
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
@@ -477,8 +483,8 @@ for(i in 1:nrow(tagList)){
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
-  lonLatGridPlusValue$avgDiffCol=avgDiffCol
-  lonLatGridPlusValue$sdDiffCol=sdDiffCol
+  lonLatGridPlusValue$avgDiffCol=as.character(testCol)
+  lonLatGridPlusValue$sdDiffCol=as.character(testCol2)
   nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/pr/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
 
@@ -580,7 +586,7 @@ for(i in 1:nrow(tagList)){
     oneDay=apply(tempMinHist,c(1,2),mean,na.rm=T)
     
     tempMinHistYr[,,j]=oneDay
-    
+    print(j)
   }
   diffAcrossYears=apply(tempMinHistYr,c(1,2),diff)
   avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
@@ -593,6 +599,12 @@ for(i in 1:nrow(tagList)){
   
   avgDiffCol=cut(c(avgDiff),quantAvg)
   sdDiffCol=cut(c(sdDiff),quantSD)
+  col=c("black",rev(brewer.pal(9,"Purples")))
+  testCol=col[as.numeric(avgDiffCol)]
+  testCol[is.na(testCol)]="green"
+  
+  testCol2=col[as.numeric(sdDiffCol)]
+  testCol2[is.na(testCol2)]="green"
   
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
@@ -601,8 +613,8 @@ for(i in 1:nrow(tagList)){
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
   lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
-  lonLatGridPlusValue$avgDiffCol=avgDiffCol
-  lonLatGridPlusValue$sdDiffCol=sdDiffCol
+  lonLatGridPlusValue$avgDiffCol=as.character(testCol)
+  lonLatGridPlusValue$sdDiffCol=as.character(testCol2)
   nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/","aggResults.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   

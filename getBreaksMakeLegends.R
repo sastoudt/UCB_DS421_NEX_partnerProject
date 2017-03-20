@@ -69,9 +69,11 @@ for(i in 1:nrow(tagList)){
   
   test=apply(precipHist,c(1,2),mean,na.rm=T)
   quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
+  print(k)
   }
   prHistBreak[i,]=apply(quants,2,mean,na.rm=T)
-  
+  # [1] 0.000000e+00 1.014111e-06 4.324644e-06 7.796617e-06 1.160405e-05 1.542219e-05 1.931398e-05 2.379187e-05 2.972974e-05
+ # [10] 4.001693e-05 2.485461e-04
   quants<-c()
   for(k in 1:length(subSampPr45)){
   ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/pr/",prFileNames_rcp45[subSampPr45[k]],sep="")
@@ -109,7 +111,7 @@ for(i in 1:nrow(tagList)){
   quants<-rbind(quants,unname(quantile(c(test),seq(0,1,by=.1),na.rm=T)))
   }
   minTempHistBreak[i,]=apply(quants,2,mean,na.rm=T)
-  
+  ## 229.2667 247.5466 255.0066 264.1902 270.6052 276.3952 282.5225 287.3514 290.8524 293.0666 302.5298
   quants<-c()
   for(k in 1:length(subSampMinTemp45)){
   ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmin/",tempMinFileNames_rcp45[subSampMinTemp45[k]],sep="")
