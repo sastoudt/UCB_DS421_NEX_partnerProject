@@ -83,13 +83,17 @@ for(j in 1:length(prFileNames_hist)){
   setwd(toSavePath)
   
   oneDay=apply(precipHist,c(1,2),mean,na.rm=T)
+  oneDay[is.na(oneDay)]=-1
+  oneDay[is.nan(oneDay)]=-1
+  #summary(c(oneDay))
   
   
   toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep="")
   #imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
   setwd(toSavePath)
   ## make image
-  year=substr(prFileNames_hist[j],nchar(as.character(prFileNames_hist[j]))-11,nchar(as.character(prFileNames_hist[j]))-8)
+ # year=substr(prFileNames_hist[j],nchar(as.character(prFileNames_hist[j]))-11,nchar(as.character(prFileNames_hist[j]))-8)
+  year=  substr(tempMaxFileNames_hist[j],nchar(as.character(tempMaxFileNames_hist[j]))-6,nchar(as.character(tempMaxFileNames_hist[j]))-3)
   
   
   if(makePNG){
@@ -99,12 +103,17 @@ for(j in 1:length(prFileNames_hist)){
     imgName=paste(prFileNames_hist[j],"mean",".svg",sep="")
     devSVG(file=imgName,width=10,height=8)
   }
+  colAllPr=c(brewer.pal(9,"Blues"),"black")
   
-  test=image(lon-180, lat, oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("historical ",tagList[i,1]),main=paste("Precip",year),xlab="lat",ylab="lon")
+  breaksAllPr=c(0.000000e+00, 1.014111e-06, 4.324644e-06, 7.796617e-06, 1.160405e-05, 1.542219e-05, 1.931398e-05, 2.379187e-05, 2.972974e-05,
+    4.001693e-05 ,2.485461e-04)
+  breaksAllPr=c(-2,breaksAllPr)
+  colAllPr=c("red",colAllPr)
+  test=image(lon[,1]-180, lat[,1], oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("historical ",tagList[i,1]),main=paste("Precip",year),xlab="lat",ylab="lon")
   map("world",add=T) ## + key
   dev.off()
   
-  prHistYr[,,j]=oneDay
+  #prHistYr[,,j]=oneDay
   print(paste("precip file",j,sep=" "))
   
 }
@@ -123,12 +132,18 @@ for(j in 1:length(tempMinFileNames_hist)){
   setwd(toSavePath)
   
   oneDay=apply(tempMinHist,c(1,2),mean,na.rm=T)
+  oneDay=apply(tempMaxHist,c(1,2),mean,na.rm=T)
+  oneDay[is.na(oneDay)]=0
+  oneDay[is.nan(oneDay)]=0
+  #summary(c(oneDay))
+
  
   toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
   #imgName=paste(prFileNames_hist[j],"day",k,".svg",sep="")
   setwd(toSavePath)
   ## make image
-  year=substr(tempMinFileNames_hist[j],nchar(as.character(tempMinFileNames_hist[j]))-11,nchar(as.character(tempMinFileNames_hist[j]))-8)
+  #year=substr(tempMinFileNames_hist[j],nchar(as.character(tempMinFileNames_hist[j]))-11,nchar(as.character(tempMinFileNames_hist[j]))-8)
+  year=  substr(tempMaxFileNames_hist[j],nchar(as.character(tempMaxFileNames_hist[j]))-6,nchar(as.character(tempMaxFileNames_hist[j]))-3)
   
   
   if(makePNG){
@@ -138,8 +153,13 @@ for(j in 1:length(tempMinFileNames_hist)){
     imgName=paste(tempMinFileNames_hist[j],"mean",".svg",sep="")
     devSVG(file=imgName,width=10,height=8)
   }
-  
-  test=image(lon-180, lat, oneDay,breaks=breaksAllTempMin,col=colAllTempMin,sub=paste("historical ",tagList[i,1]),main=paste("Min Temp",year),xlab="lat",ylab="lon")
+  colAllTempMin=c("black",rev(brewer.pal(9,"Purples")))
+  breaksAllTempMin=c(229.2667, 247.5466, 255.0066, 264.1902, 270.6052, 276.3952, 282.5225,
+                     287.3514, 290.8524, 293.0666, 302.5298)
+
+  breaksAllTempMin=c(-1,breaksAllTempMin)
+  colAllTempMin=c("green",colAllTempMin)
+  test=image(lon[,1]-180, lat[,1], oneDay,breaks=breaksAllTempMin,col=colAllTempMin,sub=paste("historical ",tagList[i,1]),main=paste("Min Temp",year),xlab="lat",ylab="lon")
   map("world",add=T) ## + key
   dev.off()
   
