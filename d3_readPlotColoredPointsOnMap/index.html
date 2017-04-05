@@ -113,7 +113,9 @@ d3.json("world-50m.json", function(error, world) {
 });
 		load_pointsonmap();
 
- 
+ d3.select("svg").on("mousedown.log", function() {
+  console.log(projection.invert(d3.mouse(this)));
+});
 	</script>
 </body>
 </html>
