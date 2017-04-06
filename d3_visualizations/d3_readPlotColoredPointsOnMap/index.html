@@ -1,0 +1,121 @@
+<!-- adapted from Proxima's code and http://bl.ocks.org/phil-pedruco/7745589-->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>D3 map</title>
+	<script src="http://d3js.org/topojson.v1.min.js"></script>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script> 
+	<!-- added to try to debug-->
+	<script src="https://d3js.org/d3-array.v1.min.js"></script>
+	<script src="https://d3js.org/d3-geo.v1.min.js"></script>
+</head>
+<style>
+
+    
+.graticule {
+  fill: none;
+  stroke: #777;
+  stroke-width: 0.5px;
+  stroke-opacity: 0.5;
+}
+
+.land {
+  fill: #222;
+}
+
+.boundary {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 0.5px;
+}
+
+
+    body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+
+.x.axis path {
+  display: none;
+  font: 20px sans-serif;
+}
+</style>
+<body>
+	<script>
+		
+
+		function load_pointsonmap(){ 
+			d3.csv("testMini2.csv", function(error,data) {
+			
+			svg.selectAll("circle")
+		 .data(data).enter()
+		 .append("circle")
+		
+		 .attr("transform", function(d) {
+		 coordinates=[d.lon,d.lat];
+		 
+		 	return "translate(" + projection(coordinates) + ")";})
+		 .attr("r", "5px")
+		 .attr("fill", function(d) {
+		 
+		 return d.col; /*d.avgDiffCol */
+		 })
+		 .style("opacity",.5)
+		 
+		});
+		}
+	
+
+
+	var width = 960, height = 480;
+
+/*var projection = d3.geoEquirectangular()*/
+var projection=d3.geo.equirectangular() 
+    .scale(height / Math.PI)
+    .translate([width / 2, height / 2]);
+
+
+var path = d3.geoPath()
+    .projection(projection);
+
+var graticule = d3.geoGraticule();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+svg.append("path")
+    .datum(graticule)
+    .attr("class", "graticule")
+    .attr("d", path);
+
+d3.json("world-50m.json", function(error, world) {
+  if (error) throw error;
+
+  svg.insert("path", ".graticule")
+      .datum(topojson.feature(world, world.objects.land))
+      .attr("class", "land")
+      .attr("d", path);
+
+  svg.insert("path", ".graticule")
+      .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
+      .attr("class", "boundary")
+      .attr("d", path);
+      
+      
+});
+		load_pointsonmap();
+
+ d3.select("svg").on("mousedown.log", function() {
+  console.log(projection.invert(d3.mouse(this)));
+});
+	</script>
+</body>
+</html>

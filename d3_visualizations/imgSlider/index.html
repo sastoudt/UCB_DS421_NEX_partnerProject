@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualized Global Precipitation for 2012</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="chroma.min.js"></script>
+    <script src="tween.min.js"></script>
+    <script src="d3.slider.js"></script>
+ <link rel="stylesheet" href="d3.slider.css" />  
+    <style>
+
+        
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .center {
+            width: 435px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h3 {
+            width: 1000px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        div.intro {
+            width: 1000px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: small;
+        }
+
+        #cf {
+            position:relative;
+            margin:0 auto;
+            height: 700px;
+        }
+
+
+        #cf img {
+            position:absolute;
+            left:0;
+            width: 1600px;
+        }
+
+        #cf img.bottom {
+            opacity: 0;
+        }
+
+        .gem {
+            width: 1600px;
+        }
+
+    </style>
+    <!--
+    <script type="text/javascript">
+
+       
+    </script>
+    -->
+</head>
+<body>
+
+<h1>
+    Visualized Global Precipitation for 2012
+</h1>
+
+<div class="intro">
+
+    <p>This page shows the global average precipitation (rain). On this page you can find two kinds of visualizations. The
+first one shows an animation that shows the precipitation for each month of the year. The second one
+is a static image showing the global annual average precipitation. </p>
+    <p>
+        These images were created using open global precipitation data from the <a href="http://www.esrl.noaa.gov/psd/cgi-bin/DataAccess.pl?DB_dataset=GPCC+Precipitation+Combined+Full+V6+and+V4+Monitoring+Data+Product+(1.0x1.0)&DB_variable=Precipitation&DB_statistic=Total&DB_tid=40280&DB_did=150&DB_vid=3050">www.esri.noaa.gov</a>  site.
+        The data was downloaded in <a href="http://www.unidata.ucar.edu/software/netcdf/">NetCDF format</a> and I converted it
+        using a simple java program to a list of CSV files for easy processing in javascript. From these CSVs I used the HTML5 canvas
+        to create these images. This page only shows the images, not the canvas elements. The reason is that the CSVs are rather big. For more
+        information on how this was done, look at <a href="http://www.smartjava.org/content/create-global-precipitation-rain-visualizations-html5-canvas-and-open-data"> this article </a>on the smartjava site.
+    </p>
+    <p>
+        
+    </p>
+</div>
+
+<h2>
+    Monthly average precipitation: 2012
+</h2>
+
+<div class="intro">
+    The following animation shows the average precipitation for 2012. It starts in January and slowly moves to December. Red means
+    low precipitation, yellow a little, green more and blue a lot. The scale I've used here is a logarithmic one (see below the image).
+</div>
+<h3 id="title-2012">
+    Showing precipitation: January 2012
+</h3>
+
+<!--
+<div id="cf">
+    <img id="img-1950" class="top" src="berkeley-logo.png" />
+    <img id="img-1951" class="bottom" src="pglsVBayes.png" />
+    <img id="img-1952" class="bottom" src="Rplot001.png" />
+   
+
+</div>
+-->
+<h2>
+    Average precipitation: 2012
+</h2>
+
+<div class="intro">
+    <p>When you take the amount of precipitation for each month, and divide it by the amount of months you get
+    a general idea where the most rain falls in a year. Of course the sahara and the middle-east stick out, but
+    apparently also chili is a bit dry. Which apparently is called the <a href="http://en.wikipedia.org/wiki/Atacama_Desert">Atacama Desert</a>
+    and is one of the dryest places on the earth. </p>
+    <p>The same scale, shown below the image, applies here as we've used for the previous series of images.</p>
+
+</div>
+
+<div id="slider6"></div>
+<div id="cf" style="height: 2400px; width: 3000px">
+    <img id="img-1950" class="top" src="pr_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1950.ncday1.png" />
+    <img id="img-1950.003" class="bottom" src="pr_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1950.ncday2.png" />
+    <img id="img-1950.005" class="bottom" src="pr_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1950.ncday3.png" />
+   
+
+</div>
+
+<div>
+<h2>Test</h2>
+</div>
+<!--
+<div class="center">
+    <img src="legend.png"/>
+</div>
+-->
+
+
+<script>
+
+
+
+
+    
+    var allTweens;
+
+    init();
+    animate();
+    
+    /*    d3.select('#slider6').call(d3.slider().axis(true).min(2000).max(2100).step(5)); */
+
+var currentImage = document.getElementById('img-'+1950);
+    var newImg=document.getElementById('img-'+1950);
+
+/*step 1/365 kick out extra day in leap year */
+/*.axis(true).min(1950).max(1953).step(1)*/
+
+/*want to move this down */
+d3.select('#slider6').call(d3.slider()
+  .axis(true).min(1950).max(1950.005).step(1/365)
+  .on("slide", function(evt, value) {
+    /*
+    var newData = _(site_data).filter( function(site) {
+      return site.created_at < value;
+    })
+    */
+    newImg=document.getElementById('img-'+Math.round(value*1000)/1000);
+    console.log(value);
+    // console.log("New set size ", newData.length);
+displayImg(newImg);
+/*console.log(newImg);*/
+currentImage=newImg;
+/*console.log(currentImage);*/
+    /*displaySites(newData);*/
+  })
+);
+
+function displayImg(nextImg){
+/*currentImage.style.opacity=1-currentImage.style.opacity/100;*/
+currentImage.style.opacity=0;
+nextImg.style.opacity=1;
+/*nextImg.style.opacity=currentImage.style.opacity/100;*/
+/*
+currentImage= newImg;
+console.log(currentImage);
+console.log(newImg);
+*/
+}
+/* now works backwards and forwards*/
+
+
+    function init() {
+        var output = document.createElement( 'div' );
+        output.style.cssText = 'position: absolute; left: 50px; top: 300px; font-size: 100px';
+        document.body.appendChild( output );
+
+        // create a chain of tweens
+        allTweens = setupTweens(3);
+        allTweens[0].start();
+    }
+
+    function setupTweens(imageCount) {
+        var tweens = [];
+        for (var i = 0 ; i < imageCount ; i++) {
+            var tween = new TWEEN.Tween( { opac: 0, image: i, max: imageCount } )
+                    .to( { opac: 100 }, 2500 )
+                    .easing( TWEEN.Easing.Linear.None )
+                    .onUpdate( function () {
+                        // on update, lower the opacity of image i and update the opacity of
+                        // image i+1;
+                        /*
+                        var currentImage = document.getElementById('img-'+(this.image+1));
+
+                        if (this.image == imageCount -1) {
+                            var nextImage = document.getElementById('img-'+1);
+                        } else {
+                            var nextImage = document.getElementById('img-'+(this.image+2));
+                        }
+
+                        currentImage.style.opacity = 1- this.opac / 100;
+                        nextImage.style.opacity = this.opac / 100;
+                        */
+                    } );
+
+            tween.onComplete(function() {
+
+                //document.getElementById('title-2012').textContent = "Showing precipitation: " + month[this.image] + " " + 2012;
+                // Set the inner variable to 0.
+                
+                /*
+                this.opac = 0;
+                // we're done, restart
+                if (this.max-1 == this.image) {
+                    allTweens[0].start();
+                }
+                */
+
+            });
+            // connect to each another
+            if (i > 0) {
+                tweens[i-1].chain(tween);
+            }
+
+            tweens.push(tween);
+            tweens[0].repeat();
+        }
+
+        return tweens;
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        TWEEN.update();
+    }
+</script>
+
+</body>
+</html>
