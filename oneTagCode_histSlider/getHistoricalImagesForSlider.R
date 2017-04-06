@@ -18,17 +18,24 @@ maxTempBreaks=c(-1,maxTempBreaks)
 maxTempCol=c(brewer.pal(9,"YlOrRd"),"black")
 maxTempCol=c("purple",maxTempCol)
 
+maxTempBreakSD
+
+
 breaksAllPr=c(0.000000e+00, 1.014111e-06, 4.324644e-06, 7.796617e-06, 1.160405e-05, 1.542219e-05, 1.931398e-05, 2.379187e-05, 2.972974e-05,
               4.001693e-05 ,2.485461e-04)
 breaksAllPr=c(-2,breaksAllPr)
 colAllPr=c(brewer.pal(9,"Blues"),"black")
 colAllPr=c("red",colAllPr)
 
+breaksAllPrSD
+
 breaksAllTempMin=c(229.2667, 247.5466, 255.0066, 264.1902, 270.6052, 276.3952, 282.5225,
                    287.3514, 290.8524, 293.0666, 302.5298)
 breaksAllTempMin=c(-1,breaksAllTempMin)
 colAllTempMin=c("black",rev(brewer.pal(9,"Purples")))
 colAllTempMin=c("green",colAllTempMin)
+
+breaksAllTempMinSD
 
 tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F)
 nex_climate_filenames <- read.table("nex_climate_filenames.txt", 
@@ -100,9 +107,23 @@ for(j in 1:length(prFileNames_hist)){
     devSVG(file=imgName,width=10,height=8)
   }
   
-  test=image(lon[,1]-180, lat[,1], oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("historical ",tagList[i,1]),main=paste("Precip",year),xlab="lat",ylab="lon")
+  test=image(lon[,1]-180, lat[,1], oneDay,breaks=breaksAllPr,col=colAllPr,sub=paste("historical ",tagList[i,1]),main=paste("Mean Precip",year),xlab="lat",ylab="lon")
   map("world",add=T) ## + key
   dev.off()
+  
+  
+  if(makePNG){
+    imgName=paste(prFileNames_hist[j],"sd",".png",sep="")
+    png(file=imgName,width=10,height=8,units="in",res = 300)
+  }else{
+    imgName=paste(prFileNames_hist[j],"sd",".svg",sep="")
+    devSVG(file=imgName,width=10,height=8)
+  }
+  
+  test=image(lon[,1]-180, lat[,1], oneDay,breaks=breaksAllPrSD,col=colAllPr,sub=paste("historical ",tagList[i,1]),main=paste("SD Precip",year),xlab="lat",ylab="lon")
+  map("world",add=T) ## + key
+  dev.off()
+  
 
   print(paste("precip file",j,sep=" "))
   
@@ -140,7 +161,19 @@ for(j in 1:length(tempMinFileNames_hist)){
     devSVG(file=imgName,width=10,height=8)
   }
  
-  test=image(lon[,1]-180, lat[,1], oneDay,breaks=breaksAllTempMin,col=colAllTempMin,sub=paste("historical ",tagList[i,1]),main=paste("Min Temp",year),xlab="lat",ylab="lon")
+  test=image(lon[,1]-180, lat[,1], oneDay,breaks=breaksAllTempMin,col=colAllTempMin,sub=paste("historical ",tagList[i,1]),main=paste("Mean Min Temp",year),xlab="lat",ylab="lon")
+  map("world",add=T) ## + key
+  dev.off()
+  
+  if(makePNG){
+    imgName=paste(tempMinFileNames_hist[j],"sd",".png",sep="")
+    png(file=imgName,width=10,height=8,units="in",res = 300)
+  }else{
+    imgName=paste(tempMinFileNames_hist[j],"sd",".svg",sep="")
+    devSVG(file=imgName,width=10,height=8)
+  }
+  
+  test=image(lon[,1]-180, lat[,1], oneDay,breaks=breaksAllTempMinSD,col=colAllTempMin,sub=paste("historical ",tagList[i,1]),main=paste("SD Min Temp",year),xlab="lat",ylab="lon")
   map("world",add=T) ## + key
   dev.off()
   
@@ -179,7 +212,20 @@ for(j in 1:length(tempMaxFileNames_hist)){
   }
   
   
-  test=image(lon[,1]-180, lat[,1], oneDay,breaks=maxTempBreaks,col=maxTempCol,sub=paste("historical ",tagList[i,1]),main=paste("Max Temp",year),xlab="lat",ylab="lon")
+  test=image(lon[,1]-180, lat[,1], oneDay,breaks=maxTempBreaks,col=maxTempCol,sub=paste("historical ",tagList[i,1]),main=paste("Mean Max Temp",year),xlab="lat",ylab="lon")
+  map("world",add=T) ## + key
+  dev.off()
+  
+  if(makePNG){
+    imgName=paste(tempMaxFileNames_hist[j],"sd",".png",sep="")
+    png(file=imgName,width=10,height=8,units="in",res = 300)
+  }else{
+    imgName=paste(tempMaxFileNames_hist[j],"sd",".svg",sep="")
+    devSVG(file=imgName,width=10,height=8)
+  }
+  
+  
+  test=image(lon[,1]-180, lat[,1], oneDay,breaks=maxTempBreaks,col=maxTempCol,sub=paste("historical ",tagList[i,1]),main=paste("SD Max Temp",year),xlab="lat",ylab="lon")
   map("world",add=T) ## + key
   dev.off()
   
@@ -197,6 +243,12 @@ devSVG(file=imgName,width=12,height=4)
 colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=3,symmetric=F)
 dev.off()
 
+imgName=paste(tagList[i,1],"_maxTempHistLegendSD.svg",sep="")
+toPlot=maxTempBreaksSD[-1]
+devSVG(file=imgName,width=12,height=4)
+colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=3,symmetric=F)
+dev.off()
+
 toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
 setwd(toSavePath)
 imgName=paste(tagList[i,1],"_minTempHistLegendAvg.svg",sep="")
@@ -205,10 +257,22 @@ devSVG(file=imgName,width=12,height=4)
 colorlegend(color=colAllTempMin[-1],breaks=toPlot,at=toPlot,x=toPlot,digits=3,symmetric=F)
 dev.off()
 
+imgName=paste(tagList[i,1],"_minTempHistLegendSD.svg",sep="")
+toPlot=breaksAllTempMinSD[-1]
+devSVG(file=imgName,width=12,height=4)
+colorlegend(color=colAllTempMin[-1],breaks=toPlot,at=toPlot,x=toPlot,digits=3,symmetric=F)
+dev.off()
+
 toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep="")
 setwd(toSavePath)
 imgName=paste(tagList[i,1],"_prHistLegendAvg.svg",sep="")
 toPlot=breaksAllPr[-1]
+devSVG(file=imgName,width=12,height=4)
+colorlegend(color=colAllPr[-1],breaks=toPlot,at=toPlot,x=toPlot,digits=3,symmetric=F)
+dev.off()
+
+imgName=paste(tagList[i,1],"_prHistLegendSD.svg",sep="")
+toPlot=breaksAllPrSD[-1]
 devSVG(file=imgName,width=12,height=4)
 colorlegend(color=colAllPr[-1],breaks=toPlot,at=toPlot,x=toPlot,digits=3,symmetric=F)
 dev.off()
