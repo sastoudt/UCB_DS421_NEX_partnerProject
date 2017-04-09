@@ -8,11 +8,11 @@ Run getHistoricalImagesForSlider.R
 
 If you are using getBreakPoints.R there are lines to uncomment in getHistoricalImagesForSlider.R to transfer the break points over to this analysis.
 
-This code will generate an image per year of the average and standard deviation of each variable and save them to the appropriate directory.
+This code will generate an image per year of the average and standard deviation of each variable and save them to the appropriate directory. This code will also generate the legends corresponding to each climate mode tag-variable pair. 
 
 Run loadImgD3Slider.R
 
-This code will automatically generate some of the Javascript code needed for the image slider in D3. This code will print to the console, and then you copy and paste these chunks into the appropriate area in the D3 code (see the d3visualizations README for more details).
+This code will automatically generate some of the Javascript code needed for the image slider in D3. This code will print to the console, and then you copy and paste these chunks into the appropriate area in the D3 code (see the d3visualizations README for more details including instructions for incorporating the legend). 
 
 
 
