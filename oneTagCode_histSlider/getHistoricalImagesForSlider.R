@@ -11,14 +11,18 @@ lon=read.csv("lon.csv",stringsAsFactors=F)
 lat=read.csv("lat.csv",stringsAsFactors=F)
 lonLatGrid=expand.grid(lon[,1],lat[,1])
 
-## run getBreaksMakeLegendsHistoricalOnly.R to get breakpoints 
+## run getBreakPoints.R to get breakpoints
+
+#maxTempBreaks=maxTempHistBreak ## if using getBreakPoints.R
 
 maxTempBreaks=c(238.1236, 252.4237, 260.7205, 268.3477, 274.6672, 280.4095, 285.7682, 290.0989, 292.9525, 299.6218, 311.6947)
 maxTempBreaks=c(-1,maxTempBreaks)
 maxTempCol=c(brewer.pal(9,"YlOrRd"),"black")
 maxTempCol=c("purple",maxTempCol)
 
-maxTempBreakSD
+#maxTempBreakSD=maxTempHistBreakSD ## if using getBreakPoints.R
+
+#breaksAllPr=prHistBreak ## if using getBreakPoints.R
 
 
 breaksAllPr=c(0.000000e+00, 1.014111e-06, 4.324644e-06, 7.796617e-06, 1.160405e-05, 1.542219e-05, 1.931398e-05, 2.379187e-05, 2.972974e-05,
@@ -27,7 +31,10 @@ breaksAllPr=c(-2,breaksAllPr)
 colAllPr=c(brewer.pal(9,"Blues"),"black")
 colAllPr=c("red",colAllPr)
 
-breaksAllPrSD
+#breaksAllPrSD=prHistBreakSD ## if using getBreakPoints.R
+
+#breaksAllTempMin=minTempHistBreak ## if using getBreakPoints.R
+
 
 breaksAllTempMin=c(229.2667, 247.5466, 255.0066, 264.1902, 270.6052, 276.3952, 282.5225,
                    287.3514, 290.8524, 293.0666, 302.5298)
@@ -35,7 +42,8 @@ breaksAllTempMin=c(-1,breaksAllTempMin)
 colAllTempMin=c("black",rev(brewer.pal(9,"Purples")))
 colAllTempMin=c("green",colAllTempMin)
 
-breaksAllTempMinSD
+#breaksAllTempMinSD=minTempHistBreakSD ## if using getBreakPoints.R
+
 
 tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F)
 nex_climate_filenames <- read.table("nex_climate_filenames.txt", 
