@@ -7,7 +7,7 @@ require(maps)
 require(MASS)
 
 ## path before rawdata, no ending backslash
-yourPathToData=""
+yourPathToData="/Volumes/Sara_5TB/NEX"
 wdGit="~/Desktop/UCB_DS421_NEX_partnerProject"
 setwd(wdGit)
 
@@ -75,11 +75,27 @@ i=15
     oneDay=apply(precip45,c(1,2),mean,na.rm=T)
     
     pr45Yr[,,j]=oneDay
-    
+    print(j)
   }
+  
   ## is this what I want?
   apply(pr45Yr,3,robustLM,x)
-  apply(pr45Yr,3,sd)
+  
+  robustLM(pr45Yr[,,1],x)
+  
+  ## for each location, do it
+  ## 1440 x 720 robust regressions
+  coeffMat=matrix(NA,nrow=nrow(pr45Yr),ncol=ncol(pr45Yr))
+  for(i in 1:nrow(pr45Yr)){
+    for(j in 1:ncol(pr45Yr)){
+      coeffMat[i,j]=robustLM(pr45Yr[i,j,],x)
+      ## need a try catch for places that are all NA on boundaries
+      print(j)
+    }
+    print(i)
+  }
+  dim(pr45Yr)
+  apply(pr45Yr,3,sd,na.rm=T) ## gives appropriate dimension
   
   
   
