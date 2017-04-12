@@ -59,9 +59,10 @@ i=15
   x=seq(2006,2100,by=1)
   
   robustLM=function(y,x){
-    test=rlm(y~x)
+    test=rlm(y~x,maxit=50)
     return(unname(coefficients(test)[2]))
   }
+  ## needs to be in formula form or doesn't do 
   
   
   pr45Yr=array(0,c(1440,720,length(prFileNames_rcp45)))
@@ -81,20 +82,25 @@ i=15
   ## is this what I want?
   apply(pr45Yr,3,robustLM,x)
   
-  robustLM(pr45Yr[,,1],x)
+  #robustLM(pr45Yr[,,1],x)
   
   ## for each location, do it
   ## 1440 x 720 robust regressions
   coeffMat=matrix(NA,nrow=nrow(pr45Yr),ncol=ncol(pr45Yr))
   for(i in 1:nrow(pr45Yr)){
     for(j in 1:ncol(pr45Yr)){
-      coeffMat[i,j]=robustLM(pr45Yr[i,j,],x)
+      #coeffMat[i,j]=tryCatch({robustLM(pr45Yr[i,j,],x)},warning=function(w){w},error=function(e){NA},finally={robustLM(pr45Yr[i,j,],x)})
       ## need a try catch for places that are all NA on boundaries
-      print(j)
+      #coeffMat[i,j]=try(robustLM(pr45Yr[i,j,],x))
+      test=try(robustLM(pr45Yr[i,j,],x),silent=T)
+      coeffMat[i,j]=ifelse(class(test)=="try-error",NA, test)
     }
     print(i)
-  }
-  dim(pr45Yr)
+  } ## takes a decent amount of time
+  #In rlm.default(x, y, weights, method = method, wt.method = wt.method,  ... :
+  #                     'rlm' failed to converge in 50 steps
+  save(coeffMat,file="coeffMatpr45Yr.RData")
+  hist(c(coeffMat))
   apply(pr45Yr,3,sd,na.rm=T) ## gives appropriate dimension
   
   
