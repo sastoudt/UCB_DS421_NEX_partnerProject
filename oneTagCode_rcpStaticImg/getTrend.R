@@ -62,7 +62,7 @@ i=15
     test=rlm(y~x,maxit=50)
     return(unname(coefficients(test)[2]))
   }
-  ## needs to be in formula form or doesn't do 
+  ## needs to be in formula form or doesn't do intercept
   
   
   pr45Yr=array(0,c(1440,720,length(prFileNames_rcp45)))
@@ -79,19 +79,12 @@ i=15
     print(j)
   }
   
-  ## is this what I want?
-  #apply(pr45Yr,3,robustLM,x)
-  
-  #robustLM(pr45Yr[,,1],x)
-  
   ## for each location, do it
   ## 1440 x 720 robust regressions
   coeffMat=matrix(NA,nrow=nrow(pr45Yr),ncol=ncol(pr45Yr))
   for(i in 1:nrow(pr45Yr)){
     for(j in 1:ncol(pr45Yr)){
-      #coeffMat[i,j]=tryCatch({robustLM(pr45Yr[i,j,],x)},warning=function(w){w},error=function(e){NA},finally={robustLM(pr45Yr[i,j,],x)})
-      ## need a try catch for places that are all NA on boundaries
-      #coeffMat[i,j]=try(robustLM(pr45Yr[i,j,],x))
+     
       test=try(robustLM(pr45Yr[i,j,],x),silent=T)
       coeffMat[i,j]=ifelse(class(test)=="try-error",NA, test)
     }
@@ -99,12 +92,12 @@ i=15
   } ## takes a decent amount of time
   #In rlm.default(x, y, weights, method = method, wt.method = wt.method,  ... :
   #                     'rlm' failed to converge in 50 steps
-  save(coeffMat,file="coeffMatpr45Yr.RData")
-  hist(c(coeffMat))
+  #save(coeffMat,file="coeffMatpr45Yr.RData")
+  #hist(c(coeffMat))
   sdSnap=apply(pr45Yr,c(1,2),sd,na.rm=T) ## now gives appropriate dimension
   
-  quantTrend=quantile(c(coeffMat),seq(0,1,by=.1),na.rm=T)
-  quantSD=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
+  quantTrendPr45=quantile(c(coeffMat),seq(0,1,by=.1),na.rm=T)
+  quantSDPr45=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
@@ -120,130 +113,78 @@ i=15
   for(j in 1:length(prFileNames_rcp85)){
     ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/pr/",prFileNames_rcp85[j],sep="")
     ncin <- nc_open(ncname)
-    precip85 <- ncvar_get(ncin,"pr")
+    precip45 <- ncvar_get(ncin,"pr")
     nc_close(ncin)
     
     
-    #toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/pr/",sep="")
-    #imgName=paste(prFileNames_rcp85[j],"_yearMean",".json",sep="")
-    #setwd(toSavePath)
-    ## make image
     oneDay=apply(precip85,c(1,2),mean,na.rm=T)
     
     pr85Yr[,,j]=oneDay
-    
-  }
-  diffAcrossYears=apply(pr85Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
-  
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
-  
-  quantAvgAllPr85=rbind(quantAvgAllPr85,quantAvg)
-  quantSDAllPr85=rbind(quantSDAllPr85,quantSD)
-  
-  avgDiffCol=cut(c(avgDiff),quantAvg)
-  sdDiffCol=cut(c(sdDiff),quantSD)
-  
-  
-  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
-  names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
-  lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
-  lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
-  lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
-  lonLatGridPlusValue$avgDiffCol=avgDiffCol
-  lonLatGridPlusValue$sdDiffCol=sdDiffCol
-  nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/pr/","aggResults.csv",sep="")
-  write.csv(lonLatGridPlusValue,nameSave,row.names=F)
-  
-  tempMinHistYr=array(0,c(1440,720,length(tempMinFileNames_hist)))
-  for(j in 1:length(tempMinFileNames_hist)){
-    ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/",tempMinFileNames_hist[j],sep="")
-    ncin <- nc_open(ncname)
-    tempMinHist <- ncvar_get(ncin,"tasmin")
-    
-    nc_close(ncin)
-    
-    #toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",sep="")
-    #imgName=paste(tempMinFileNames_hist[j],"yearMean",".json",sep="")
-    #setwd(toSavePath)
-    
-    oneDay=apply(tempMinHist,c(1,2),mean,na.rm=T)
-    
-    tempMinHistYr[,,j]=oneDay
     print(j)
   }
-  diffAcrossYears=apply(tempMinHistYr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
   
-  quantAvgAllMinTempHist=rbind(quantAvgAllMinTempHist,quantAvg)
-  quantSDAllMinTempHist=rbind(quantSDAllMinTempHist,quantSD)
+  ## for each location, do it
+  ## 1440 x 720 robust regressions
+  coeffMat=matrix(NA,nrow=nrow(pr85Yr),ncol=ncol(pr85Yr))
+  for(i in 1:nrow(pr85Yr)){
+    for(j in 1:ncol(pr85Yr)){
+      
+      test=try(robustLM(pr85Yr[i,j,],x),silent=T)
+      coeffMat[i,j]=ifelse(class(test)=="try-error",NA, test)
+    }
+    print(i)
+  } 
+  sdSnap=apply(pr85Yr,c(1,2),sd,na.rm=T) ## now gives appropriate dimension
   
-  avgDiffCol=cut(c(avgDiff),quantAvg)
-  sdDiffCol=cut(c(sdDiff),quantSD)
-  col=c("black",rev(brewer.pal(9,"Purples")))
-  testCol=col[as.numeric(avgDiffCol)]
-  testCol[is.na(testCol)]="green"
+  quantTrendPr85=quantile(c(coeffMat),seq(0,1,by=.1),na.rm=T)
+  quantSDPr85=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
   
-  testCol2=col[as.numeric(sdDiffCol)]
-  testCol2[is.na(testCol2)]="green"
-  
-  
-  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
+  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
-  lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
-  lonLatGridPlusValue$avgDiffCol=as.character(testCol)
-  lonLatGridPlusValue$sdDiffCol=as.character(testCol2)
-  nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmin/","aggResults.csv",sep="")
+  lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
+  lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+  
+  nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/pr/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
+
   
   tempMin45Yr=array(0,c(1440,720,length(tempMinFileNames_rcp45)))
   for(j in 1:length(tempMinFileNames_rcp45)){
     ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmin/",tempMinFileNames_rcp45[j],sep="")
     ncin <- nc_open(ncname)
     tempMin45 <- ncvar_get(ncin,"tasmin")
-    ## need to do for tmax, tmin, see what they are called
     nc_close(ncin)
     
     
-    #toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmin/",sep="")
-    #imgName=paste(tempMinFileNames_rcp45[j],"yearMean",".json",sep="")
-    #setwd(toSavePath)
     oneDay=apply(tempMin45,c(1,2),mean,na.rm=T)
     
     tempMin45Yr[,,j]=oneDay
     
   }
-  diffAcrossYears=apply(tempMin45Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
+  coeffMat=matrix(NA,nrow=nrow(tempMin45Yr),ncol=ncol(tempMin45Yr))
+  for(i in 1:nrow(tempMin45Yr)){
+    for(j in 1:ncol(tempMin45Yr)){
+     
+      test=try(robustLM(tempMin45Yr[i,j,],x),silent=T)
+      coeffMat[i,j]=ifelse(class(test)=="try-error",NA, test)
+    }
+    print(i)
+  } 
+  sdSnap=apply(tempMin45Yr,c(1,2),sd,na.rm=T) ## now gives appropriate dimension
   
-  quantAvgAllMinTemp45=rbind(quantAvgAllMinTemp45,quantAvg)
-  quantSDAllMinTemp45=rbind(quantSDAllMinTemp45,quantSD)
+  quantTrendMinTemp45=quantile(c(coeffMat),seq(0,1,by=.1),na.rm=T)
+  quantSDMinTemp45=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
   
-  avgDiffCol=cut(c(avgDiff),quantAvg)
-  sdDiffCol=cut(c(sdDiff),quantSD)
-  
-  
-  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
+  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
-  lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
-  lonLatGridPlusValue$avgDiffCol=avgDiffCol
-  lonLatGridPlusValue$sdDiffCol=sdDiffCol
-  nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmin/","aggResults.csv",sep="")
+  lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
+  lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+  
+  nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmin/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
   tempMin85Yr=array(0,c(1440,720,length(tempMinFileNames_rcp85)))
@@ -254,207 +195,117 @@ i=15
     tempMin85 <- ncvar_get(ncin,"tasmin")
     nc_close(ncin)
     
-    
-    #toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmin/",sep="")
-    #imgName=paste(tempMinFileNames_rcp85[j],"yearMean",".json",sep="")
-    #setwd(toSavePath)
     oneDay=apply(tempMin85,c(1,2),mean,na.rm=T)
     
     tempMin85Yr[,,j]=oneDay
     
   }
-  diffAcrossYears=apply(tempMin85Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
+  coeffMat=matrix(NA,nrow=nrow(tempMin85Yr),ncol=ncol(tempMin85Yr))
+  for(i in 1:nrow(tempMin85Yr)){
+    for(j in 1:ncol(tempMin85Yr)){
+     
+      test=try(robustLM(tempMin85Yr[i,j,],x),silent=T)
+      coeffMat[i,j]=ifelse(class(test)=="try-error",NA, test)
+    }
+    print(i)
+  } 
+  sdSnap=apply(tempMin85Yr,c(1,2),sd,na.rm=T) ## now gives appropriate dimension
   
-  quantAvgAllMinTemp85=rbind(quantAvgAllMinTemp85,quantAvg)
-  quantSDAllMinTemp85=rbind(quantSDAllMinTemp85,quantSD)
+  quantTrendMinTemp85=quantile(c(coeffMat),seq(0,1,by=.1),na.rm=T)
+  quantSDMinTemp85=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
   
-  avgDiffCol=cut(c(avgDiff),quantAvg)
-  sdDiffCol=cut(c(sdDiff),quantSD)
-  
-  
-  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
+  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
-  lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
-  lonLatGridPlusValue$avgDiffCol=avgDiffCol
-  lonLatGridPlusValue$sdDiffCol=sdDiffCol
-  nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmin/","aggResults.csv",sep="")
+  lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
+  lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+  
+  nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmin/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
-  tempMaxHistYr=array(0,c(1440,720,length(tempMaxFileNames_hist)))
-  ptm <- proc.time()
-  for(j in 1:length(tempMaxFileNames_hist)){
-    ncname <- paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/",tempMaxFileNames_hist[j],sep="")
-    ncin <- nc_open(ncname)
-    tempMaxHist <- ncvar_get(ncin,"tasmax")
-    ## need to do for tmax, tmin, see what they are called
-    nc_close(ncin)
-    
-    #toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
-    #imgName=paste(tempMaxFileNames_hist[j],"yearMean",".json",sep="")
-    #setwd(toSavePath)
-    ## make image
-    oneDay=apply(tempMaxHist,c(1,2),mean,na.rm=T)
-    
-    tempMaxHistYr[,,j]=oneDay
-    print(j)
-  }
-  proc.time() - ptm ## 2741.494 ## 45 minutes
-  diffAcrossYears=apply(tempMaxHistYr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
-  #0%          10%          20%          30%          40%          50%          60%          70%          80% 
-  #-0.068202411 -0.006062361  0.002386491  0.007871585  0.011943221  0.016031125  0.020668690  0.026385084  0.034669317 
-  #90%         100% 
-  #  0.051657164  0.133763378 
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
-  # 0%       10%       20%       30%       40%       50%       60%       70%       80%       90%      100% 
-  #0.1761529 0.4663317 0.5432861 0.6078010 0.6763409 0.7639354 0.8753163 0.9821325 1.1092197 1.2822268 2.1060257 
-  
-  quantAvgAllMaxTempHist=rbind(quantAvgAllMaxTempHist,quantAvg)
-  quantSDAllMaxTempHist=rbind(quantSDAllMaxTempHist,quantSD)
-  
-  avgDiffCol=cut(c(avgDiff),quantAvg)
-  sdDiffCol=cut(c(sdDiff),quantSD)
-  col=c(brewer.pal(9,"YlOrRd"),"black")
-  testCol=col[as.numeric(avgDiffCol)]
-  testCol[is.na(testCol)]="purple"
-  
-  testCol2=col[as.numeric(sdDiffCol)]
-  testCol2[is.na(testCol2)]="purple"
-  
-  
-  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
-  names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
-  lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
-  lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
-  lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
-  lonLatGridPlusValue$avgDiffCol=as.character(testCol)
-  lonLatGridPlusValue$sdDiffCol=as.character(testCol2)
-  nameSave=paste(yourPathToData,"/rawdata/historical/",tagList[i,1],"/tasmax/","aggResults.csv",sep="")
-  write.csv(lonLatGridPlusValue,nameSave,row.names=F)
-  
-  
-  tempMax45Yr=array(0,c(1440,720,length(tempMaxFileNames_rcp45)))
+   tempMax45Yr=array(0,c(1440,720,length(tempMaxFileNames_rcp45)))
   
   for(j in 1:length(tempMaxFileNames_rcp45)){
     ncname <- paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp45[j],sep="")
     ncin <- nc_open(ncname)
     tempMax45 <- ncvar_get(ncin,"tasmax")
-    ## need to do for tmax, tmin, see what they are called
     nc_close(ncin)
     
-    #toSavePath=paste(yourPathToData,"/images/rcp45/",tagList[i,1],"/tasmax/",sep="")
-    #imgName=paste(tempMaxFileNames_rcp45[j],"yearMean",".json",sep="")
-    #setwd(toSavePath)
     oneDay=apply(tempMax45,c(1,2),mean,na.rm=T)
     tempMax45Yr[,,j]=oneDay
     
   }
-  diffAcrossYears=apply(tempMax45Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
-  
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
-  
-  quantAvgAllMaxTemp45=rbind(quantAvgAllMaxTemp45,quantAvg)
-  quantSDAllMaxTemp45=rbind(quantSDAllMaxTemp45,quantSD)
-  
-  avgDiffCol=cut(c(avgDiff),quantAvg)
-  sdDiffCol=cut(c(sdDiff),quantSD)
-  
-  
-  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
-  names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
-  lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
-  lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
-  lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
-  lonLatGridPlusValue$avgDiffCol=avgDiffCol
-  lonLatGridPlusValue$sdDiffCol=sdDiffCol
-  nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/","aggResults.csv",sep="")
-  write.csv(lonLatGridPlusValue,nameSave,row.names=F)
-  
+   coeffMat=matrix(NA,nrow=nrow(tempMax45Yr),ncol=ncol(tempMax45Yr))
+   for(i in 1:nrow(tempMax45Yr)){
+     for(j in 1:ncol(tempMax45Yr)){
+      
+       test=try(robustLM(tempMax45Yr[i,j,],x),silent=T)
+       coeffMat[i,j]=ifelse(class(test)=="try-error",NA, test)
+     }
+     print(i)
+   } 
+   sdSnap=apply(tempMax45Yr,c(1,2),sd,na.rm=T) ## now gives appropriate dimension
+   
+   quantTrendMaxTemp45=quantile(c(coeffMat),seq(0,1,by=.1),na.rm=T)
+   quantSDMaxTemp45=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
+   
+   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
+   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
+   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
+   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
+   lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
+   lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+   
+   nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/","aggResultsProj.csv",sep="")
+   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
+   
+   
   tempMax85Yr=array(0,c(1440,720,length(tempMaxFileNames_rcp85)))
   
   for(j in 1:length(tempMaxFileNames_rcp85)){
     ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/",tempMaxFileNames_rcp85[j],sep="")
     ncin <- nc_open(ncname)
     tempMax85 <- ncvar_get(ncin,"tasmax")
-    ## need to do for tmax, tmin, see what they are called
     nc_close(ncin)
     
-    #toSavePath=paste(yourPathToData,"/images/rcp85/",tagList[i,1],"/tasmax/",sep="")
-    #imgName=paste(tempMaxFileNames_rcp85[j],"yearMean",".json",sep="")
-    #setwd(toSavePath)
+
     oneDay=apply(tempMax85,c(1,2),mean,na.rm=T)
     
     tempMax85Yr[,,j]=oneDay
     
   }
-  diffAcrossYears=apply(tempMax85Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
+  coeffMat=matrix(NA,nrow=nrow(tempMax45Yr),ncol=ncol(tempMax45Yr))
+  for(i in 1:nrow(tempMax85Yr)){
+    for(j in 1:ncol(tempMax85Yr)){
+      
+      test=try(robustLM(tempMax85Yr[i,j,],x),silent=T)
+      coeffMat[i,j]=ifelse(class(test)=="try-error",NA, test)
+    }
+    print(i)
+  } 
+  sdSnap=apply(tempMax85Yr,c(1,2),sd,na.rm=T) ## now gives appropriate dimension
   
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
+  quantTrendMaxTemp85=quantile(c(coeffMat),seq(0,1,by=.1),na.rm=T)
+  quantSDMaxTemp85=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
   
-  
-  quantAvgAllMaxTemp85=rbind(quantAvgAllMaxTemp85,quantAvg)
-  quantSDAllMaxTemp85=rbind(quantSDAllMaxTemp85,quantSD)
-  
-  avgDiffCol=cut(c(avgDiff),quantAvg)
-  sdDiffCol=cut(c(sdDiff),quantSD)
-  
-  
-  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
+  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
-  lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
-  lonLatGridPlusValue$avgDiffCol=avgDiffCol
-  lonLatGridPlusValue$sdDiffCol=sdDiffCol
-  nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/","aggResults.csv",sep="")
+  lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
+  lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+  
+  nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
-  
-  
-}
+
 
 gitHubDir=""
 setwd(gitHubDir)
 
-write.csv(quantAvgAllPrHist,"quantilesPrHistAggAvg.csv",row.names=F)
-write.csv(quantAvgAllPr45,"quantilesPr45AggAvg.csv",row.names=F)
-write.csv(quantAvgAllPr85,"quantilesPr85AggAvg.csv",row.names=F)
-
-write.csv(quantSDAllPrHist,"quantilesPrHistAggSD.csv",row.names=F)
-write.csv(quantSDAllPr45,"quantilesPrHistAggSD.csv",row.names=F)
-write.csv(quantSDAllPr85,"quantilesPrHistAggSD.csv",row.names=F)
+write.csv(rbind(quantTrendPr45,quantTrendPr85,quantTrendMinTemp45,quantTrendMinTemp85,
+                quantTrendMaxTemp45,quantTrendMaxTemp85),"quantilesProjectTrend.csv",row.names=F)
+write.csv(rbind(quantSDPr45,quantSDPr85,quantSDMinTemp45,quantSDMinTemp85,
+                quantSDMaxTemp45,quantSDMaxTemp85),"quantilesProjectSD.csv",row.names=F)
 
 
-write.csv(quantAvgAllMinTempHist,"quantilesMinTempHistAggAvg.csv",row.names=F)
-write.csv(quantAvgAllMinTemp45,"quantilesMinTemp45AggAvg.csv",row.names=F)
-write.csv(quantAvgAllMinTemp85,"quantilesMinTemp85AggAvg.csv",row.names=F)
-
-write.csv(quantSDAllMinTempHist,"quantilesMinTempHistAggSD.csv",row.names=F)
-write.csv(quantSDAllMinTemp45,"quantilesMinTempHistAggSD.csv",row.names=F)
-write.csv(quantSDAllMinTemp85,"quantilesMinTempHistAggSD.csv",row.names=F)
-
-
-write.csv(quantAvgAllMaxTempHist,"quantilesMaxTempHistAggAvg.csv",row.names=F)
-write.csv(quantAvgAllMaxTemp45,"quantilesMaxTemp45AggAvg.csv",row.names=F)
-write.csv(quantAvgAllMaxTemp85,"quantilesMaxTemp85AggAvg.csv",row.names=F)
-
-write.csv(quantSDAllMaxTempHist,"quantilesMaxTempHistAggSD.csv",row.names=F)
-write.csv(quantSDAllMaxTemp45,"quantilesMaxTempHistAggSD.csv",row.names=F)
-write.csv(quantSDAllMaxTemp85,"quantilesMaxTempHistAggSD.csv",row.names=F)
