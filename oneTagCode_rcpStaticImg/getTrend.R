@@ -80,7 +80,7 @@ i=15
   }
   
   ## is this what I want?
-  apply(pr45Yr,3,robustLM,x)
+  #apply(pr45Yr,3,robustLM,x)
   
   #robustLM(pr45Yr[,,1],x)
   
@@ -101,33 +101,19 @@ i=15
   #                     'rlm' failed to converge in 50 steps
   save(coeffMat,file="coeffMatpr45Yr.RData")
   hist(c(coeffMat))
-  apply(pr45Yr,3,sd,na.rm=T) ## gives appropriate dimension
+  sdSnap=apply(pr45Yr,c(1,2),sd,na.rm=T) ## now gives appropriate dimension
   
+  quantTrend=quantile(c(coeffMat),seq(0,1,by=.1),na.rm=T)
+  quantSD=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
   
-  
-  diffAcrossYears=apply(pr45Yr,c(1,2),diff)
-  avgDiff=apply(diffAcrossYears,c(2,3),mean,na.rm=T) ##mean of differences between successive years
-  sdDiff=apply(diffAcrossYears,c(2,3),sd,na.rm=T)   ## sd of differences between successive years
-  
-  quantAvg=quantile(c(avgDiff),seq(0,1,by=.1),na.rm=T)
-  quantSD=quantile(c(sdDiff),seq(0,1,by=.1),na.rm=T)
-  
-  quantAvgAllPr45=rbind(quantAvgAllPr45,quantAvg)
-  quantSDAllPr45=rbind(quantSDAllPr45,quantSD)
-  
-  avgDiffCol=cut(c(avgDiff),quantAvg)
-  sdDiffCol=cut(c(sdDiff),quantSD)
-  
-  
-  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(avgDiff),c(sdDiff)))
+  lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$avgDiff=as.numeric(as.character(lonLatGridPlusValue$avgDiff))
-  lonLatGridPlusValue$sdDiff=as.numeric(as.character(lonLatGridPlusValue$sdDiff))
-  lonLatGridPlusValue$avgDiffCol=avgDiffCol
-  lonLatGridPlusValue$sdDiffCol=sdDiffCol
-  nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/pr/","aggResults.csv",sep="")
+  lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
+  lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+
+  nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/pr/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
   pr85Yr=array(0,c(1440,720,length(prFileNames_rcp85)))
