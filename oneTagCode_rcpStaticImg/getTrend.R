@@ -97,14 +97,22 @@ i=15
   sdSnap=apply(pr45Yr,c(1,2),sd,na.rm=T) ## now gives appropriate dimension
   
   quantTrendPr45=quantile(c(coeffMat),seq(0,1,by=.1),na.rm=T)
+  # 0%           10%           20%           30%           40%           50%           60%           70% 
+  #   -6.371520e-07 -1.578887e-08 -2.291595e-09  8.980725e-10  5.151895e-09  1.057727e-08  1.685303e-08  2.384621e-08 
+  # 80%           90%          100% 
+  # 3.308791e-08  5.192528e-08  5.790400e-07 
   quantSDPr45=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
+  # 0%          10%          20%          30%          40%          50%          60%          70%          80% 
+  # 0.000000e+00 4.276545e-07 1.012098e-06 1.467588e-06 1.847629e-06 2.197525e-06 2.580519e-06 3.082164e-06 3.893791e-06 
+  # 90%         100% 
+  #   5.313486e-06 4.629693e-05 
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
-  names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
+  names(lonLatGridPlusValue)=c("lon","lat","robustSlope","SD")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
-  lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+  lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
+  lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
 
   nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/pr/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
@@ -113,7 +121,7 @@ i=15
   for(j in 1:length(prFileNames_rcp85)){
     ncname <- paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/pr/",prFileNames_rcp85[j],sep="")
     ncin <- nc_open(ncname)
-    precip45 <- ncvar_get(ncin,"pr")
+    precip85 <- ncvar_get(ncin,"pr")
     nc_close(ncin)
     
     
@@ -140,11 +148,11 @@ i=15
   quantSDPr85=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
-  names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
+  names(lonLatGridPlusValue)=c("lon","lat","robustSlope","SD")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
-  lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+  lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
+  lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
   
   nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/pr/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
@@ -178,11 +186,11 @@ i=15
   quantSDMinTemp45=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
-  names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
+  names(lonLatGridPlusValue)=c("lon","lat","robustSlope","SD")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
-  lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+  lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
+  lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
   
   nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmin/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
@@ -215,11 +223,11 @@ i=15
   quantSDMinTemp85=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
-  names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
+  names(lonLatGridPlusValue)=c("lon","lat","robustSlope","SD")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
-  lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+  lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
+  lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
   
   nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmin/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
@@ -251,11 +259,11 @@ i=15
    quantSDMaxTemp45=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
    
    lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
-   names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
+   names(lonLatGridPlusValue)=c("lon","lat","robustSlope","SD")
    lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
    lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-   lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
-   lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+   lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
+   lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
    
    nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/","aggResultsProj.csv",sep="")
    write.csv(lonLatGridPlusValue,nameSave,row.names=F)
@@ -290,11 +298,11 @@ i=15
   quantSDMaxTemp85=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
   
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
-  names(lonLatGridPlusValue)=c("lon","lat","avgDiff","sdDiff")
+  names(lonLatGridPlusValue)=c("lon","lat","robustSlope","SD")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
-  lonLatGridPlusValue$coeffMat=as.numeric(as.character(lonLatGridPlusValue$coeffMat))
-  lonLatGridPlusValue$sdSnap=as.numeric(as.character(lonLatGridPlusValue$sdSnap))
+  lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
+  lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
   
   nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
