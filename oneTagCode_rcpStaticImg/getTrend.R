@@ -124,6 +124,7 @@ i=15
     precip85 <- ncvar_get(ncin,"pr")
     nc_close(ncin)
     
+    #Error in nc_open trying to open file /Volumes/Sara_5TB/NEX/rawdata/rcp85/MIROC-ESM-CHEM/pr/pr_day_BCSD_rcp85_r1i1p1_MIROC-ESM-CHEM_2090.nc
     
     oneDay=apply(precip85,c(1,2),mean,na.rm=T)
     
