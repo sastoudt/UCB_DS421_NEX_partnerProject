@@ -143,7 +143,7 @@ is a static image showing the global annual average precipitation. </p>
 </div>
 
 <div>
-    <img src="legendMaxTemp.png"/> <!-- need to change based on dropdown -->
+    <img id="legend-maxTempMean" src="legendMaxTemp.png"/> <!-- need to change based on dropdown -->
 </div>
 
 <div id="slider6"></div>
@@ -240,6 +240,7 @@ is a static image showing the global annual average precipitation. </p>
 var currentImage = document.getElementById('img-maxTempMean'+1950);
     var newImg=document.getElementById('img-maxTempMean'+1950);
 var sect=inds.value;
+var currentLegend=document.getElementById('legend-maxTempMean');
 /*step 1/365 kick out extra day in leap year */
 /*.axis(true).min(1950).max(1953).step(1)*/
 
@@ -268,10 +269,27 @@ currentImage=newImg;
 d3.select('#inds')
 			.on("change", function () {
 				 sect = inds.value;
-				console.log(sect);
+				 console.log(sect);
+				 newLegend=document.getElementById('legend-'+sect);
+				 console.log(newLegend);
+				 displayLegend(newLegend);
+				 currentLegend=newLegend;
+				console.log(currentLegend);
 				/*load_pointsonmap(sect);*/
 				
 			});
+	function displayLegend(nextLegend){
+/*currentImage.style.opacity=1-currentImage.style.opacity/100;*/
+currentLegend.style.opacity=0;
+nextLegend.style.opacity=1;
+/*nextImg.style.opacity=currentImage.style.opacity/100;*/
+/*
+currentImage= newImg;
+console.log(currentImage);
+console.log(newImg);
+*/
+}		
+			
 
 function displayImg(nextImg){
 /*currentImage.style.opacity=1-currentImage.style.opacity/100;*/
