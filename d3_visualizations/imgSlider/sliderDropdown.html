@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualized Global Maximum Temperature (Average Per Year)</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="chroma.min.js"></script>
+    <script src="tween.min.js"></script>
+    <script src="d3.slider.js"></script>
+    
+    <select id="inds">
+		<option value="minTempMean" >MIROC-ESM-CHEM min temp mean</option>
+		<option value="maxTempMean" selected="selected">MIROC-ESM-CHEM max temp mean</option>
+		<option value="prMean">MIROC-ESM-CHEM precip mean</option>
+		<option value="minTempSD" >MIROC-ESM-CHEM min temp mean</option>
+			<!-- can start it at a tag and then switch to another, but doing this to test-->
+		<option value="maxTempSD">MIROC-ESM-CHEM max temp mean</option>
+		<option value="prSD">MIROC-ESM-CHEM precip mean</option>
+</select>
+
+ <link rel="stylesheet" href="d3.slider.css" />  
+    <style>
+
+        #inds{
+	position:absolute;
+	top:10px;
+	left:10px;
+}
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .center {
+            width: 435px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h3 {
+            width: 1000px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        div.intro {
+            width: 1000px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: small;
+        }
+
+        #cf {
+            position:relative;
+            margin:0 auto;
+            height: 700px;
+        }
+
+
+        #cf img {
+            position:absolute;
+            left:0;
+            width: 1600px;
+        }
+
+        #cf img.bottom {
+            opacity: 0;
+        }
+
+        .gem {
+            width: 1600px;
+        }
+
+    </style>
+    <!--
+    <script type="text/javascript">
+
+       
+    </script>
+    -->
+</head>
+<body>
+
+<h1>
+    Visualized Global Maximum Temperature (Average Per Year)
+</h1>
+
+<div class="intro">
+<!--
+    <p>This page shows the global average precipitation (rain). On this page you can find two kinds of visualizations. The
+first one shows an animation that shows the precipitation for each month of the year. The second one
+is a static image showing the global annual average precipitation. </p>
+    <p>
+        These images were created using open global precipitation data from the <a href="http://www.esrl.noaa.gov/psd/cgi-bin/DataAccess.pl?DB_dataset=GPCC+Precipitation+Combined+Full+V6+and+V4+Monitoring+Data+Product+(1.0x1.0)&DB_variable=Precipitation&DB_statistic=Total&DB_tid=40280&DB_did=150&DB_vid=3050">www.esri.noaa.gov</a>  site.
+        The data was downloaded in <a href="http://www.unidata.ucar.edu/software/netcdf/">NetCDF format</a> and I converted it
+        using a simple java program to a list of CSV files for easy processing in javascript. From these CSVs I used the HTML5 canvas
+        to create these images. This page only shows the images, not the canvas elements. The reason is that the CSVs are rather big. For more
+        information on how this was done, look at <a href="http://www.smartjava.org/content/create-global-precipitation-rain-visualizations-html5-canvas-and-open-data"> this article </a>on the smartjava site.
+    </p>
+    <p>
+        
+    </p>
+    -->
+</div>
+
+<h2>
+    <!-- Monthly average precipitation: 2012 -->
+</h2>
+
+<div class="intro">
+   
+   <!--
+    The following animation shows the average precipitation for 2012. It starts in January and slowly moves to December. Red means
+    low precipitation, yellow a little, green more and blue a lot. The scale I've used here is a logarithmic one (see below the image). -->
+</div>
+<h3 id="title-2012">
+  <!--  Showing precipitation: January 2012 -->
+</h3>
+
+<!--
+<div id="cf">
+    <img id="img-1950" class="top" src="berkeley-logo.png" />
+    <img id="img-1951" class="bottom" src="pglsVBayes.png" />
+    <img id="img-1952" class="bottom" src="Rplot001.png" />
+   
+
+</div>
+-->
+<h2>
+   <!-- Average precipitation: 2012 -->
+</h2>
+
+<div class="intro">
+   <!--
+    <p>When you take the amount of precipitation for each month, and divide it by the amount of months you get
+    a general idea where the most rain falls in a year. Of course the sahara and the middle-east stick out, but
+    apparently also chili is a bit dry. Which apparently is called the <a href="http://en.wikipedia.org/wiki/Atacama_Desert">Atacama Desert</a>
+    and is one of the dryest places on the earth. </p>
+    <p>The same scale, shown below the image, applies here as we've used for the previous series of images.</p>
+-->
+</div>
+
+<div>
+    <img src="legendMaxTemp.png"/> <!-- need to change based on dropdown -->
+</div>
+
+<div id="slider6"></div>
+<div id="cf" style="height: 2400px; width: 3000px">
+  <!-- <img id="img-1950" class="top" src="pr_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1950.ncday1.png" />
+    <img id="img-1950.003" class="bottom" src="pr_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1950.ncday2.png" />
+    <img id="img-1950.005" class="bottom" src="pr_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1950.ncday3.png" />
+  -->  
+    
+    
+<img id="img-maxTempMean1950" class="top" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1950.ncmean.png" />
+<img id="img-maxTempMean1951" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1951.ncmean.png" />
+<img id="img-maxTempMean1952" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1952.ncmean.png" />
+<img id="img-maxTempMean1953" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1953.ncmean.png" />
+<img id="img-maxTempMean1954" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1954.ncmean.png" />
+<img id="img-maxTempMean1955" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1955.ncmean.png" />
+<img id="img-maxTempMean1956" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1956.ncmean.png" />
+<img id="img-maxTempMean1957" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1957.ncmean.png" />
+<img id="img-maxTempMean1958" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1958.ncmean.png" />
+<img id="img-maxTempMean1959" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1959.ncmean.png" />
+<img id="img-maxTempMean1960" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1960.ncmean.png" />
+<img id="img-maxTempMean1961" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1961.ncmean.png" />
+<img id="img-maxTempMean1962" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1962.ncmean.png" />
+<img id="img-maxTempMean1963" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1963.ncmean.png" />
+<img id="img-maxTempMean1964" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1964.ncmean.png" />
+<img id="img-maxTempMean1965" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1965.ncmean.png" />
+<img id="img-maxTempMean1966" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1966.ncmean.png" />
+<img id="img-maxTempMean1967" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1967.ncmean.png" />
+<img id="img-maxTempMean1968" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1968.ncmean.png" />
+<img id="img-maxTempMean1969" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1969.ncmean.png" />
+<img id="img-maxTempMean1970" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1970.ncmean.png" />
+<img id="img-maxTempMean1971" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1971.ncmean.png" />
+<img id="img-maxTempMean1972" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1972.ncmean.png" />
+<img id="img-maxTempMean1973" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1973.ncmean.png" />
+<img id="img-maxTempMean1974" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1974.ncmean.png" />
+<img id="img-maxTempMean1975" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1975.ncmean.png" />
+<img id="img-maxTempMean1976" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1976.ncmean.png" />
+<img id="img-maxTempMean1977" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1977.ncmean.png" />
+<img id="img-maxTempMean1978" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1978.ncmean.png" />
+<img id="img-maxTempMean1979" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1979.ncmean.png" />
+<img id="img-maxTempMean1980" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1980.ncmean.png" />
+<img id="img-maxTempMean1981" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1981.ncmean.png" />
+<img id="img-maxTempMean1982" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1982.ncmean.png" />
+<img id="img-maxTempMean1983" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1983.ncmean.png" />
+<img id="img-maxTempMean1984" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1984.ncmean.png" />
+<img id="img-maxTempMean1985" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1985.ncmean.png" />
+<img id="img-maxTempMean1986" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1986.ncmean.png" />
+<img id="img-maxTempMean1987" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1987.ncmean.png" />
+<img id="img-maxTempMean1988" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1988.ncmean.png" />
+<img id="img-maxTempMean1989" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1989.ncmean.png" />
+<img id="img-maxTempMean1990" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1990.ncmean.png" />
+<img id="img-maxTempMean1991" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1991.ncmean.png" />
+<img id="img-maxTempMean1992" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1992.ncmean.png" />
+<img id="img-maxTempMean1993" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1993.ncmean.png" />
+<img id="img-maxTempMean1994" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1994.ncmean.png" />
+<img id="img-maxTempMean1995" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1995.ncmean.png" />
+<img id="img-maxTempMean1996" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1996.ncmean.png" />
+<img id="img-maxTempMean1997" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1997.ncmean.png" />
+<img id="img-maxTempMean1998" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1998.ncmean.png" />
+<img id="img-maxTempMean1999" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1999.ncmean.png" />
+<img id="img-maxTempMean2000" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_2000.ncmean.png" />
+<img id="img-maxTempMean2001" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_2001.ncmean.png" />
+<img id="img-maxTempMean2002" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_2002.ncmean.png" />
+<img id="img-maxTempMean2003" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_2003.ncmean.png" />
+<img id="img-maxTempMean2004" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_2004.ncmean.png" />
+<img id="img-maxTempMean2005" class="bottom" src="tasmax_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_2005.ncmean.png" />
+
+</div>
+
+<!--
+<div>
+<h2>Test</h2>
+</div>
+-->
+
+<!--<div class="center">-->
+
+
+
+
+<script>
+
+
+
+
+    
+    var allTweens;
+
+    init();
+    animate();
+    
+    /*    d3.select('#slider6').call(d3.slider().axis(true).min(2000).max(2100).step(5)); */
+
+var currentImage = document.getElementById('img-maxTempMean'+1950);
+    var newImg=document.getElementById('img-maxTempMean'+1950);
+var sect=inds.value;
+/*step 1/365 kick out extra day in leap year */
+/*.axis(true).min(1950).max(1953).step(1)*/
+
+/*want to move this down */
+d3.select('#slider6').call(d3.slider()
+  .axis(true).min(1950).max(2005).step(1)
+  .on("slide", function(evt, value) {
+    /*
+    var newData = _(site_data).filter( function(site) {
+      return site.created_at < value;
+    })
+    */
+    console.log('img-'+sect+value);
+    /*newImg=document.getElementById('img-'+value);*/
+    newImg=document.getElementById('img-'+sect+value);
+    console.log(value);
+    // console.log("New set size ", newData.length);
+displayImg(newImg);
+/*console.log(newImg);*/
+currentImage=newImg;
+/*console.log(currentImage);*/
+    /*displaySites(newData);*/
+  })
+);
+
+d3.select('#inds')
+			.on("change", function () {
+				 sect = inds.value;
+				console.log(sect);
+				/*load_pointsonmap(sect);*/
+				
+			});
+
+function displayImg(nextImg){
+/*currentImage.style.opacity=1-currentImage.style.opacity/100;*/
+currentImage.style.opacity=0;
+nextImg.style.opacity=1;
+/*nextImg.style.opacity=currentImage.style.opacity/100;*/
+/*
+currentImage= newImg;
+console.log(currentImage);
+console.log(newImg);
+*/
+}
+/* now works backwards and forwards*/
+
+
+    function init() {
+        var output = document.createElement( 'div' );
+        output.style.cssText = 'position: absolute; left: 50px; top: 300px; font-size: 100px';
+        document.body.appendChild( output );
+
+        // create a chain of tweens
+        allTweens = setupTweens(3);
+        allTweens[0].start();
+    }
+
+    function setupTweens(imageCount) {
+        var tweens = [];
+        for (var i = 0 ; i < imageCount ; i++) {
+            var tween = new TWEEN.Tween( { opac: 0, image: i, max: imageCount } )
+                    .to( { opac: 100 }, 2500 )
+                    .easing( TWEEN.Easing.Linear.None )
+                    .onUpdate( function () {
+                        // on update, lower the opacity of image i and update the opacity of
+                        // image i+1;
+                        /*
+                        var currentImage = document.getElementById('img-'+(this.image+1));
+
+                        if (this.image == imageCount -1) {
+                            var nextImage = document.getElementById('img-'+1);
+                        } else {
+                            var nextImage = document.getElementById('img-'+(this.image+2));
+                        }
+
+                        currentImage.style.opacity = 1- this.opac / 100;
+                        nextImage.style.opacity = this.opac / 100;
+                        */
+                    } );
+
+            tween.onComplete(function() {
+
+                //document.getElementById('title-2012').textContent = "Showing precipitation: " + month[this.image] + " " + 2012;
+                // Set the inner variable to 0.
+                
+                /*
+                this.opac = 0;
+                // we're done, restart
+                if (this.max-1 == this.image) {
+                    allTweens[0].start();
+                }
+                */
+
+            });
+            // connect to each another
+            if (i > 0) {
+                tweens[i-1].chain(tween);
+            }
+
+            tweens.push(tween);
+            tweens[0].repeat();
+        }
+
+        return tweens;
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        TWEEN.update();
+    }
+</script>
+
+</body>
+</html>
