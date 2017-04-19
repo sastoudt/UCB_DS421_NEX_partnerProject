@@ -7,15 +7,17 @@
     <script src="tween.min.js"></script>
     <script src="d3.slider.js"></script>
     
-    <select id="inds">
+    <select id="inds" style="padding-bottom:100px;" >
 		<option value="minTempMean" >MIROC-ESM-CHEM min temp mean</option>
 		<option value="maxTempMean" selected="selected">MIROC-ESM-CHEM max temp mean</option>
 		<option value="prMean">MIROC-ESM-CHEM precip mean</option>
-		<option value="minTempSD" >MIROC-ESM-CHEM min temp mean</option>
+		<option value="minTempSD" >MIROC-ESM-CHEM min temp SD</option>
 			<!-- can start it at a tag and then switch to another, but doing this to test-->
-		<option value="maxTempSD">MIROC-ESM-CHEM max temp mean</option>
-		<option value="prSD">MIROC-ESM-CHEM precip mean</option>
+		<option value="maxTempSD">MIROC-ESM-CHEM max temp SD</option>
+		<option value="prSD">MIROC-ESM-CHEM precip SD</option>
 </select>
+
+
 
  <link rel="stylesheet" href="d3.slider.css" />  
     <style>
@@ -71,6 +73,17 @@
 
         .gem {
             width: 1600px;
+        }
+        
+         #leg img.bottom {
+            opacity: 0;
+        }
+        
+        #leg img {
+            position:absolute;
+            left:0;
+            width: 200px;
+       
         }
 
     </style>
@@ -142,12 +155,15 @@ is a static image showing the global annual average precipitation. </p>
 -->
 </div>
 
-<div>
-    <img id="legend-maxTempMean" src="legendMaxTemp.png"/> <!-- need to change based on dropdown -->
+<div id="leg">
+   <!-- <img id="legend-maxTempMean" class="top" src="legendMaxTemp.png"/> ---> <!-- need to change based on dropdown -->
+    <img id="legend-maxTempMean" class="top" src="testLegend3.png" style="padding-top:100px;" />
+    <img id="legend-minTempMean" class="bottom" src="testLegend1.png" style="padding-top:100px;" />
+    <img id="legend-prMean" class="bottom" src="testLegend2.png" style="padding-top:100px;" />
 </div>
 
 <div id="slider6"></div>
-<div id="cf" style="height: 2400px; width: 3000px">
+<div id="cf" style="height: 2400px; width: 3000px; padding-top:0px; margin-top: 300px;">
   <!-- <img id="img-1950" class="top" src="pr_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1950.ncday1.png" />
     <img id="img-1950.003" class="bottom" src="pr_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1950.ncday2.png" />
     <img id="img-1950.005" class="bottom" src="pr_day_BCSD_historical_r1i1p1_MIROC-ESM-CHEM_1950.ncday3.png" />
