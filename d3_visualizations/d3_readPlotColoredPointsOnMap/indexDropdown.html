@@ -10,10 +10,10 @@
 	<script src="https://d3js.org/d3-array.v1.min.js"></script>
 	<script src="https://d3js.org/d3-geo.v1.min.js"></script>
 	
-	<select id="inds">
-		<option value="apples" selected="selected">MIROC-ESM-CHEM min temp</option>
+	<select id="inds"">
+		<option value="apples" >MIROC-ESM-CHEM min temp</option>
 			<!-- can start it at a tag and then switch to another, but doing this to test-->
-		<option value="aggResults.csv">MIROC-ESM-CHEM max temp</option>
+		<option value="aggResults.csv" selected="selected">MIROC-ESM-CHEM max temp</option>
 		<option value="tomatoes">MIROC-ESM-CHEM precip</option>
 </select>
 </head>
@@ -22,6 +22,9 @@
 	position:absolute;
 	top:10px;
 	left:10px;
+	padding-top:1000px;
+	padding-bottom:200px;
+	margin-top:650px;
 }
     
 .graticule {
@@ -58,14 +61,28 @@
   display: none;
   font: 20px sans-serif;
 }
+
+ 
+         #leg img.bottom {
+            opacity: 0;
+        }
+        
+        #leg img {
+            position:absolute;
+            left:0;
+            width: 200px;
+       
+        }
 </style>
 <body>
-	<div>
-    <!-- <img src="legendMaxTemp.png"/> --> <!-- need to crop out white space-->
-    <img src=test/>
+	<div id="leg">
+   <!-- <img id="legend-maxTempMean" class="top" src="legendMaxTemp.png"/> ---> <!-- need to change based on dropdown -->
+    <img id="legend-aggResults.csv" class="top" src="testLegend3.png" style="padding-top:500px;" />
+    <img id="legend-apples" class="bottom" src="testLegend1.png" style="padding-top:500px;" />
+    <img id="legend-tomatoes" class="bottom" src="testLegend2.png" style="padding-top:500px;" />
 </div>
 	<script>
-	var test="legendMaxTemp.png";
+	
 
 		function load_pointsonmap(x){ 
 			d3.csv(x, function(error,data) {
@@ -89,6 +106,7 @@
 		}
 	
 
+var currentLegend=document.getElementById('legend-aggResults.csv');
 
 	var width = 960, height = 480;
 
@@ -132,13 +150,28 @@ d3.json("world-50m.json", function(error, world) {
 	d3.select('#inds')
 			.on("change", function () {
 				var sect = inds.value;
-				console.log(sect);
+				console.log(sect)
+				newLegend=document.getElementById('legend-'+sect);
+				 console.log(newLegend);
+				 displayLegend(newLegend);
+				 currentLegend=newLegend;;
 				load_pointsonmap(sect);
 				
 			});
 
 	
-
+function displayLegend(nextLegend){
+/*currentImage.style.opacity=1-currentImage.style.opacity/100;*/
+currentLegend.style.opacity=0;
+nextLegend.style.opacity=1;
+/*nextImg.style.opacity=currentImage.style.opacity/100;*/
+/*
+currentImage= newImg;
+console.log(currentImage);
+console.log(newImg);
+*/
+}		
+		
 
 		
 d3.select("svg").on("mousedown.log", function() {
