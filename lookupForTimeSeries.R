@@ -42,3 +42,16 @@ max(lat) ## 89.875
 min(lon) ## 0.125
 diff(lon)[1] ## 0.25
 max(lon) ## 359.875
+
+## for one tag, can add tag delimiters
+toWrite=paste("<img id=\"ts-",grid[,1],"_",grid[,2],"\" class=\"bottom\" src=\"","ts-",grid[,1],"_",grid[,2],
+              "trend",".png\" />",sep="")
+length(toWrite) ## 1036800
+## this is why we can't actually do this
+writeLines(toWrite)
+
+toWrite=paste("<img id=\"ts-",grid[,1],"_",grid[,2],"\" class=\"bottom\" src=\"","ts-",grid[,1],"_",grid[,2],
+              "sd",".png\" />",sep="")
+length(toWrite)
+writeLines(toWrite)
+
