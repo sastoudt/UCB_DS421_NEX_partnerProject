@@ -22,10 +22,28 @@
 	position:absolute;
 	top:10px;
 	left:10px;
-	padding-top:1000px;
+	padding-top:500px;
 	padding-bottom:200px;
 	margin-top:650px;
 }
+
+
+        #cf {
+            position:relative;
+            margin:0 auto;
+            height: 650px;
+        }
+
+
+#cf img {
+            position:absolute;
+            left:0;
+            width: 500px;
+        }
+
+        #cf img.bottom {
+            opacity: 0;
+        }
     
 .graticule {
   fill: none;
@@ -80,6 +98,12 @@
     <img id="legend-aggResults.csv" class="top" src="testLegend3.png" style="padding-top:500px;" />
     <img id="legend-apples" class="bottom" src="testLegend1.png" style="padding-top:500px;" />
     <img id="legend-tomatoes" class="bottom" src="testLegend2.png" style="padding-top:500px;" />
+</div>
+
+<div id="cf">
+<img id="ts-blank" class="top" src="blank.png"/>
+<img id="ts-18.625_13.875" class="bottom" src="fake.png"/>
+
 </div>
 	<script>
 	
@@ -173,10 +197,39 @@ console.log(newImg);
 }		
 		
 
-		
+var currentTS=document.getElementById('ts-blank');
+var nextTS=document.getElementById('ts-blank');
 d3.select("svg").on("mousedown.log", function() {
   console.log(projection.invert(d3.mouse(this)));
+  timeSeries=projection.invert(d3.mouse(this))
+  
+  idX=Number(Math.round(timeSeries[0]+'e3')+'e-3');
+  idY=Number(Math.round(timeSeries[1]+'e3')+'e-3');
+/*
+  idX=Math.round(timeSeries[0]);
+  idY=Math.round(timeSeries[1]);
+  */
+  console.log(idX);
+  console.log(idY);
+  getTS(idX,idY);
 });
+ 
+ 
+		function getTS(x,y){ 
+		/* find grid cell id that contains point*/
+		/*nextTS=document.getElementById('ts-'+x+"_"+y);*/
+		/* point=c(18.75,13.875) Africa*/
+		nextTS=document.getElementById('ts-18.625_13.875');
+		console.log(nextTS);
+		console.log(currentTS);
+			currentTS.style.opacity=0;
+			nextTS.style.opacity=1;
+			currentTS=nextTS;
+			console.log(currentTS);
+		}
+	
+ 
+ 
  
 	</script>
 </body>

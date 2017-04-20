@@ -25,3 +25,6 @@ findGridCell(point,reshapeLookUp,lon,lat)
 
 point=rbind(c(0.380,90),c(40,100))
 apply(point,1,findGridCell,reshapeLookUp,lon,lat)
+
+point=c(18.75,13.875)
+findGridCell(point,reshapeLookUp,lon,lat)
