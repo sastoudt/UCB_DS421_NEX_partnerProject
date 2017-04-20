@@ -28,3 +28,17 @@ apply(point,1,findGridCell,reshapeLookUp,lon,lat)
 
 point=c(18.75,13.875)
 findGridCell(point,reshapeLookUp,lon,lat)
+
+point=c(-2.25,16.125)
+findGridCell(point,reshapeLookUp,lon,lat)
+
+## generate sequences
+## subtract point from this, which one has smallest magnitude
+## or have a flag for min up until this point, update
+min(lat) ## -89.875
+diff(lat)[1] ## 0.25
+max(lat) ## 89.875
+
+min(lon) ## 0.125
+diff(lon)[1] ## 0.25
+max(lon) ## 359.875

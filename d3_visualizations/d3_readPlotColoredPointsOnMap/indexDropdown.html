@@ -202,16 +202,18 @@ var nextTS=document.getElementById('ts-blank');
 d3.select("svg").on("mousedown.log", function() {
   console.log(projection.invert(d3.mouse(this)));
   timeSeries=projection.invert(d3.mouse(this))
-  
+  /*
   idX=Number(Math.round(timeSeries[0]+'e3')+'e-3');
   idY=Number(Math.round(timeSeries[1]+'e3')+'e-3');
 /*
   idX=Math.round(timeSeries[0]);
   idY=Math.round(timeSeries[1]);
-  */
+  
   console.log(idX);
   console.log(idY);
   getTS(idX,idY);
+  */
+  getTS(timeSeries[0],timeSeries[1]);
 });
  
  
@@ -219,7 +221,35 @@ d3.select("svg").on("mousedown.log", function() {
 		/* find grid cell id that contains point*/
 		/*nextTS=document.getElementById('ts-'+x+"_"+y);*/
 		/* point=c(18.75,13.875) Africa*/
-		nextTS=document.getElementById('ts-18.625_13.875');
+		
+ bestLat=0;
+ bestLon=0;
+ closestLat=1000;
+ closestLon=1000;
+ 
+ for(var i=0; i<720; i++){
+ if (Math.abs(y-lat[i])<closestLat){
+ bestLat=i;
+ closestLat=Math.abs(y-lat[i]);
+ }
+ }
+ 
+ for(var i=0; i<1440; i++){
+ if (Math.abs(x-lon[i])<closestLat){
+ bestLon=i;
+ closestLon=Math.abs(x-lon[i]);
+ }
+ }
+		getX=lon[bestLon];
+		getY=lat[bestLat];
+		console.log(getX);
+		console.log(getY);
+		/*nextTS=document.getElementById('ts-'+getX+"_"+getY);*/
+		/* checked with R code, works /*
+		
+				nextTS=document.getElementById("ts-18.625_13.875");
+
+		
 		console.log(nextTS);
 		console.log(currentTS);
 			currentTS.style.opacity=0;
@@ -228,8 +258,26 @@ d3.select("svg").on("mousedown.log", function() {
 			console.log(currentTS);
 		}
 	
+ var lat=[];
+ 
+for (var i = -89.875*4; i <= 89.875*4; i++) {
+    lat.push(i/4);
+}
+/*console.log(lat[0]);
+console.log(lat[2]);*/
+var lon=[];
+ 
+for (var i =  0.125*4; i <= 359.875*4; i++) {
+    lon.push(i/4);
+}
+ 
+
  
  
+ 
+ /*
+ console.log(lon[0]);
+ console.log(lon[1]);*/
  
 	</script>
 </body>
