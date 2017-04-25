@@ -236,15 +236,21 @@ i=15
   sdSnap=apply(tempMin85Yr,c(1,2),sd,na.rm=T) ## now gives appropriate dimension
   
   quantTrendMinTemp85=quantile(c(coeffMat),seq(0,1,by=.1),na.rm=T)
+  # 0%         10%         20%         30%         40%         50%         60%         70%         80%         90% 
+  #   0.002232454 0.035524242 0.042089865 0.047163083 0.050392194 0.057020874 0.063670514 0.070713134 0.087510706 0.134442211 
+  # 100% 
+  # 0.187453718 
   quantSDMinTemp85=quantile(c(sdSnap),seq(0,1,by=.1),na.rm=T)
-  
+  # 0%       10%       20%       30%       40%       50%       60%       70%       80%       90%      100% 
+  # 0.6298188 1.0843392 1.2657647 1.4230928 1.5457381 1.6963771 1.8547754 2.0451191 2.5191905 3.8196101 5.2602617 
+  # 
   lonLatGridPlusValue=as.data.frame(cbind(lonLatGrid,c(coeffMat),c(sdSnap)))
   names(lonLatGridPlusValue)=c("lon","lat","robustSlope","SD")
   lonLatGridPlusValue$lon=as.numeric(as.character(lonLatGridPlusValue$lon))
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
   lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
-  
+  i=15
   nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmin/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
