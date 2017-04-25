@@ -243,12 +243,13 @@ for(j in 1:length(tempMaxFileNames_hist)){
 proc.time() - ptm 
 
 ### make legends ###
+require(R2BayesX)
 toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmax/",sep="")
 setwd(toSavePath)
 imgName=paste(tagList[i,1],"_maxTempHistLegendAvg.svg",sep="")
 toPlot=maxTempBreaks[-1]
-devSVG(file=imgName,width=12,height=4)
-colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=3,symmetric=F)
+devSVG(file=imgName,width=26,height=4)
+colorlegend(color=c(brewer.pal(9,"YlOrRd"),"black"),breaks=toPlot,at=toPlot,x=toPlot,digits=2,symmetric=F)
 dev.off()
 
 imgName=paste(tagList[i,1],"_maxTempHistLegendSD.svg",sep="")
@@ -261,8 +262,8 @@ toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/tasmin/",se
 setwd(toSavePath)
 imgName=paste(tagList[i,1],"_minTempHistLegendAvg.svg",sep="")
 toPlot=breaksAllTempMin[-1]
-devSVG(file=imgName,width=12,height=4)
-colorlegend(color=colAllTempMin[-1],breaks=toPlot,at=toPlot,x=toPlot,digits=3,symmetric=F)
+devSVG(file=imgName,width=26,height=4)
+colorlegend(color=colAllTempMin[-1],breaks=toPlot,at=toPlot,x=toPlot,digits=2,symmetric=F)
 dev.off()
 
 imgName=paste(tagList[i,1],"_minTempHistLegendSD.svg",sep="")
@@ -275,13 +276,15 @@ toSavePath=paste(yourPathToData,"/images/historical/",tagList[i,1],"/pr/",sep=""
 setwd(toSavePath)
 imgName=paste(tagList[i,1],"_prHistLegendAvg.svg",sep="")
 toPlot=breaksAllPr[-1]
-devSVG(file=imgName,width=12,height=4)
-colorlegend(color=colAllPr[-1],breaks=toPlot,at=toPlot,x=toPlot,digits=3,symmetric=F)
+devSVG(file=imgName,width=26,height=4)
+spreadOut=log(toPlot)
+spreadOut[1]=-15
+colorlegend(color=colAllPr[-1],breaks=spreadOut,at=spreadOut,x=spreadOut,digits=3,symmetric=F,title="log")
 dev.off()
 
 imgName=paste(tagList[i,1],"_prHistLegendSD.svg",sep="")
 toPlot=breaksAllPrSD[-1]
 devSVG(file=imgName,width=12,height=4)
-colorlegend(color=colAllPr[-1],breaks=toPlot,at=toPlot,x=toPlot,digits=3,symmetric=F)
+colorlegend(color=colAllPr[-1],breaks=toPlot,at=toPlot,x=toPlot,digits=5,symmetric=F)
 dev.off()
 
