@@ -1,4 +1,4 @@
-githubWD="~/Desktop/UCB_DS421_NEX_partnerProject"
+githubWD=""
 setwd(githubWD)
 lon=read.csv("lon.csv",stringsAsFactors=F)[,1] 
 lat=read.csv("lat.csv",stringsAsFactors=F)[,1] 

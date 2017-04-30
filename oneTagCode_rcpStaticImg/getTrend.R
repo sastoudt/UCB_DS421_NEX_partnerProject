@@ -7,8 +7,8 @@ require(maps)
 require(MASS)
 
 ## path before rawdata, no ending backslash
-yourPathToData="/Volumes/Sara_5TB/NEX"
-wdGit="~/Desktop/UCB_DS421_NEX_partnerProject"
+yourPathToData=""
+wdGit=""
 setwd(wdGit)
 
 tagList<-read.csv("tags.csv",stringsAsFactors=F,header=F) ## get tagList for different models
@@ -37,7 +37,7 @@ quantAvgAllMaxTemp45=quantSDAllMaxTemp45=c()
 quantAvgAllPr85=quantSDAllPr85=c()
 quantAvgAllMinTemp85=quantSDAllMinTemp85=c()
 quantAvgAllMaxTemp85=quantSDAllMaxTemp85=c()
-i=15
+i=15 ## could find replace this with tag of interest
 
   ## split by type of data
   
@@ -123,8 +123,6 @@ i=15
     ncin <- nc_open(ncname)
     precip85 <- ncvar_get(ncin,"pr")
     nc_close(ncin)
-    
-    #Error in nc_open trying to open file /Volumes/Sara_5TB/NEX/rawdata/rcp85/MIROC-ESM-CHEM/pr/pr_day_BCSD_rcp85_r1i1p1_MIROC-ESM-CHEM_2090.nc
     
     oneDay=apply(precip85,c(1,2),mean,na.rm=T)
     
@@ -325,7 +323,7 @@ i=15
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
   lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
-  
+  i=15
   nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
 
