@@ -113,7 +113,14 @@ i=15 ## could find replace this with tag of interest
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
   lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
-
+ rbPal<- c(brewer.pal(9,"Blues"),"black")
+  
+  #This adds a column of color values
+  # based on the y values
+  
+  lonLatGridPlusValue$col1 <- rbPal[as.numeric(cut(lonLatGridPlusValue$robustSlope,breaks = quantile(lonLatGridPlusValue$robustSlope,seq(0,1,by=.1),na.rm=T)))]
+  lonLatGridPlusValue$col2 <- rbPal[as.numeric(cut(lonLatGridPlusValue$SD,breaks = quantile(lonLatGridPlusValue$SD,seq(0,1,by=.1),na.rm=T)))]
+  i=15
   nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/pr/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
   
@@ -160,6 +167,16 @@ i=15 ## could find replace this with tag of interest
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
   lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
+  rbPal<- c(brewer.pal(9,"Blues"),"black")
+  
+  #This adds a column of color values
+  # based on the y values
+  
+  lonLatGridPlusValue$col1 <- rbPal[as.numeric(cut(lonLatGridPlusValue$robustSlope,breaks = quantile(lonLatGridPlusValue$robustSlope,seq(0,1,by=.1),na.rm=T)))]
+  lonLatGridPlusValue$col2 <- rbPal[as.numeric(cut(lonLatGridPlusValue$SD,breaks = quantile(lonLatGridPlusValue$SD,seq(0,1,by=.1),na.rm=T)))]
+  
+  
+  
   i=15
   nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/pr/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
@@ -205,6 +222,17 @@ i=15 ## could find replace this with tag of interest
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
   lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
+  
+  rbPal<-c("black",rev(brewer.pal(9,"Purples")))
+  
+  #This adds a column of color values
+  # based on the y values
+  
+  lonLatGridPlusValue$col1 <- rbPal[as.numeric(cut(lonLatGridPlusValue$robustSlope,breaks = quantile(lonLatGridPlusValue$robustSlope,seq(0,1,by=.1),na.rm=T)))]
+  lonLatGridPlusValue$col2 <- rbPal[as.numeric(cut(lonLatGridPlusValue$SD,breaks = quantile(lonLatGridPlusValue$SD,seq(0,1,by=.1),na.rm=T)))]
+  
+  
+  
   i=15
   nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmin/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
@@ -248,6 +276,16 @@ i=15 ## could find replace this with tag of interest
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
   lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
+  
+  rbPal<-c("black",rev(brewer.pal(9,"Purples")))
+  
+  #This adds a column of color values
+  # based on the y values
+  
+  lonLatGridPlusValue$col1 <- rbPal[as.numeric(cut(lonLatGridPlusValue$robustSlope,breaks = quantile(lonLatGridPlusValue$robustSlope,seq(0,1,by=.1),na.rm=T)))]
+  lonLatGridPlusValue$col2 <- rbPal[as.numeric(cut(lonLatGridPlusValue$SD,breaks = quantile(lonLatGridPlusValue$SD,seq(0,1,by=.1),na.rm=T)))]
+  
+  
   i=15
   nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmin/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
@@ -285,6 +323,17 @@ i=15 ## could find replace this with tag of interest
    lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
    lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
    
+   rbPal<-c(brewer.pal(9,"YlOrRd"),"black")
+   
+   #This adds a column of color values
+   # based on the y values
+   
+   lonLatGridPlusValue$col1 <- rbPal[as.numeric(cut(lonLatGridPlusValue$robustSlope,breaks = quantile(lonLatGridPlusValue$robustSlope,seq(0,1,by=.1),na.rm=T)))]
+   lonLatGridPlusValue$col2 <- rbPal[as.numeric(cut(lonLatGridPlusValue$SD,breaks = quantile(lonLatGridPlusValue$SD,seq(0,1,by=.1),na.rm=T)))]
+   
+   
+   
+   i=15
    nameSave=paste(yourPathToData,"/rawdata/rcp45/",tagList[i,1],"/tasmax/","aggResultsProj.csv",sep="")
    write.csv(lonLatGridPlusValue,nameSave,row.names=F)
    
@@ -323,6 +372,15 @@ i=15 ## could find replace this with tag of interest
   lonLatGridPlusValue$lat=as.numeric(as.character(lonLatGridPlusValue$lat))
   lonLatGridPlusValue$robustSlope=as.numeric(as.character(lonLatGridPlusValue$robustSlope))
   lonLatGridPlusValue$SD=as.numeric(as.character(lonLatGridPlusValue$SD))
+  
+  rbPal<-c(brewer.pal(9,"YlOrRd"),"black")
+  
+  #This adds a column of color values
+  # based on the y values
+  
+  lonLatGridPlusValue$col1 <- rbPal[as.numeric(cut(lonLatGridPlusValue$robustSlope,breaks = quantile(lonLatGridPlusValue$robustSlope,seq(0,1,by=.1),na.rm=T)))]
+  lonLatGridPlusValue$col2 <- rbPal[as.numeric(cut(lonLatGridPlusValue$SD,breaks = quantile(lonLatGridPlusValue$SD,seq(0,1,by=.1),na.rm=T)))]
+  
   i=15
   nameSave=paste(yourPathToData,"/rawdata/rcp85/",tagList[i,1],"/tasmax/","aggResultsProj.csv",sep="")
   write.csv(lonLatGridPlusValue,nameSave,row.names=F)
