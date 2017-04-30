@@ -33,7 +33,10 @@ wd=""
 setwd(wd)
 listmyfolder <- read.table("listmyfolder.txt", header=TRUE, quote="\"", stringsAsFactors=FALSE)
 
-filesToDownload<-read.csv("filesToDownload.csv",stringsAsFactors=F,header=F)
+gitWD=""
+setwd(gitWD)
+
+filesToDownload<-read.table("nex_climate_filenames.txt",header=F,stringsAsFactors=F)
 
 prFile=listmyfolder[grepl("pr_",listmyfolder[,1]),1]
 tasmin=listmyfolder[grepl("tasmin_",listmyfolder[,1]),1]
@@ -51,5 +54,8 @@ for(i in 1:length(stillToDownload)){
 
 curlStatements=read.csv("curlStatements.csv",stringsAsFactors=F,header=F)
 
-writeLines(paste(curlStatements[idx,1],"v1.0/",filesToDownload[idx,1],sep=""), "curlToDo2.sh", sep = "\n", useBytes = FALSE)
+saveDir=""
+setwd(saveDir)
+
+writeLines(paste(curlStatements[idx,1],filesToDownload[idx,1],sep=""), "curlToDo2.sh", sep = "\n", useBytes = FALSE)
 
