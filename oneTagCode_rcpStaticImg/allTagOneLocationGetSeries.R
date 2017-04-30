@@ -1,16 +1,16 @@
 ## get all future time series for one location
 
-yourPathToData="/Volumes/Sara_5TB/NEX"
+yourPathToData=""
 
-wd="~/Desktop/UCB_DS421_NEX_partnerProject/downloadData"
+wd=""
 setwd(wd)
 
-tags<-read.csv("tagsB.csv")
+tags<-read.csv("tags.csv")
 tags=as.character(tags[,1])
 
-#tags=tags[-c(5:6)]
+
 ### find location of interest ###
-gitWD="~/Desktop/UCB_DS421_NEX_partnerProject"
+gitWD=""
 setwd(gitWD)
 
 lon=read.csv("lon.csv",stringsAsFactors=F)[,1] 
@@ -19,8 +19,7 @@ grid=expand.grid(lon,lat)
 
 lookUpTable=paste("id",grid[,1],grid[,2],sep="_")
 
-reshapeLookUp=matrix(lookUpTable,nrow=length(lon),ncol=length(lat)) ## save to csv and load into javascript
-
+reshapeLookUp=matrix(lookUpTable,nrow=length(lon),ncol=length(lat))
 point=c(-9.5,38.78)
 
 
@@ -47,30 +46,27 @@ for(i in 1:length(tags)){
 seriesMatrix<-c()
 for(i in 1:length(tags)){
   
-  ## split by type of data
-  if(i==5 | i==6){
-    ## skip not right size
-  }
-  #prFileNames=filesPertagList[[i]][grepl("pr_",filesPertagList[[i]])]
-  #tempMinFileNames=filesPertagList[[i]][grepl("tasmin_",filesPertagList[[i]])]
+  
+  prFileNames=filesPertagList[[i]][grepl("pr_",filesPertagList[[i]])]
+  tempMinFileNames=filesPertagList[[i]][grepl("tasmin_",filesPertagList[[i]])]
   tempMaxFileNames=filesPertagList[[i]][grepl("tasmax_",filesPertagList[[i]])]
   
   ## split by rcp45, rcp85
   
-  #prFileNames_rcp45=prFileNames[grepl("rcp45",prFileNames)]
-  #prFileNames_rcp85=prFileNames[grepl("rcp85",prFileNames)]
+  prFileNames_rcp45=prFileNames[grepl("rcp45",prFileNames)]
+  prFileNames_rcp85=prFileNames[grepl("rcp85",prFileNames)]
   
-  #tempMinFileNames_rcp45=tempMinFileNames[grepl("rcp45",tempMinFileNames)]
-  #tempMinFileNames_rcp85=tempMinFileNames[grepl("rcp85",tempMinFileNames)]
+  tempMinFileNames_rcp45=tempMinFileNames[grepl("rcp45",tempMinFileNames)]
+  tempMinFileNames_rcp85=tempMinFileNames[grepl("rcp85",tempMinFileNames)]
   
   tempMaxFileNames_rcp45=tempMaxFileNames[grepl("rcp45",tempMaxFileNames)]
- # tempMaxFileNames_rcp85=tempMaxFileNames[grepl("rcp85",tempMaxFileNames)]
+  tempMaxFileNames_rcp85=tempMaxFileNames[grepl("rcp85",tempMaxFileNames)]
   
   
   series<-c()
+  ## do for max temp rcp45 but can change to focus on a different variable/scenario pair
   for(j in 1:length(tempMaxFileNames_rcp45)){
     ncname <- paste(yourPathToData,"/rawdata/rcp45/",tags[i],"/tasmax/",as.character(tempMaxFileNames_rcp45[j]),sep="")
-    #ncname<-as.character(tempMaxFileNames_rcp45[j])
     ncin <- nc_open(ncname)
     tasmax<- ncvar_get(ncin,"tasmax")
     nc_close(ncin)
