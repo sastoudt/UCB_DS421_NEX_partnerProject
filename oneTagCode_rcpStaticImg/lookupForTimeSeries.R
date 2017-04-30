@@ -1,51 +1,27 @@
 githubWD="~/Desktop/UCB_DS421_NEX_partnerProject"
 setwd(githubWD)
-lon=read.csv("lon.csv",stringsAsFactors=F)[,1] ## save and load into javascript
-lat=read.csv("lat.csv",stringsAsFactors=F)[,1] ## save and load into javascript
+lon=read.csv("lon.csv",stringsAsFactors=F)[,1] 
+lat=read.csv("lat.csv",stringsAsFactors=F)[,1] 
 
 grid=expand.grid(lon,lat)
 
 lookUpTable=paste("id",grid[,1],grid[,2],sep="_")
-#head(lookUpTable)
-#class(lookUpTable)
-#length(lookUpTable)
 
-reshapeLookUp=matrix(lookUpTable,nrow=length(lon),ncol=length(lat)) ## save to csv and load into javascript
+reshapeLookUp=matrix(lookUpTable,nrow=length(lon),ncol=length(lat)) 
 
-point=c(0.380,90)
-## printed to console 
 
-## rewrite in java script
 findGridCell=function(point, lookup,lon,lat){
   
   lookup[which.min(abs(lon-point[1])),which.min(abs(lat-point[2]))]
-} ## will need a tag and variable name eventually
+} 
 
 findGridCell(point,reshapeLookUp,lon,lat)
 
 point=rbind(c(0.380,90),c(40,100))
 apply(point,1,findGridCell,reshapeLookUp,lon,lat)
 
-point=c(18.75,13.875)
-require(maps)
-map("world")
-points(point[1],point[2],col="red",pch=19)
-findGridCell(point,reshapeLookUp,lon,lat)
+### for D3 version
 
-which(lon==18.625) ## 75
-which(lat==13.875) ## 416
-
-dim(tempMin85Yr)
-x=seq(2006,2100,by=1)
-plot(x,tempMin85Yr[75,416,],type="l",main="trend rcp85",sub=findGridCell(point,reshapeLookUp,lon,lat),ylab="min temp",xlab="year")
-
-point=c(-2.25,16.125)
-findGridCell(point,reshapeLookUp,lon,lat)
-
-point=c(122.27,-37.87)
-
-map("state","ca")
-points(point)
 ## generate sequences
 ## subtract point from this, which one has smallest magnitude
 ## or have a flag for min up until this point, update
