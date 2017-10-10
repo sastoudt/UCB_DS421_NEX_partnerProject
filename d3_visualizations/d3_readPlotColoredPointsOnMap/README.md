@@ -1,3 +1,11 @@
-# D3 Read Colored Points on a Map
+## Read Colored Points on Map
 
-When you run the code in the oneTagCode_rcpStaticImg folder the data needed for this visualization will be created. indexDropdown.html displays a heatmap of trend and variability for the future projections. Here we show a dropdown menu to pick within one climate model tag and all three climate variables. The dropdown could easily be adapted to include multiple climate model tags. For comparison purposes, one could pull up two different instances of this file and choose different options. Note this visualization will not work in Google Chrome. 
+This will not work in Google Chrome.
+
+This is a mockup of a map where changing the dropdown choice changes the legend and the data displayed. See mockup.pdf for an example.
+
+The D3 code that you would need to make this fully operational is contained in this folder, the correct images just aren't for space and computational time reasons.
+
+The data displayed is created using code in the oneTagCode_rcpStaticImg folder. Point locations and colors are prespecified, and the dropdown just specifies which one to display on the map. 
+
+When you click, a time series for that location pops up. For now, if you click anywhere, a fake time series will pop up. However, the code to find the grid cell of the clicked point and load that time series image is contained in the indexDropdown.html file for future use.

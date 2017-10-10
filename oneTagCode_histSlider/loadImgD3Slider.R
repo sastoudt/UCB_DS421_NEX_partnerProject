@@ -2,7 +2,7 @@
 wd=""
 setwd(wd)
 
-filesToDownload<-read.csv("filesToDownload.csv",stringsAsFactors=F,header=F)
+filesToDownload<-read.table("nex_climate_filenamex.txt",stringsAsFactors=F,header=F)
 
 oneTag=filesToDownload[which(grepl("MIROC-ESM-CHEM",filesToDownload[,1])),1]
 

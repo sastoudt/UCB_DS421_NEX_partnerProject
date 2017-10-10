@@ -5,12 +5,12 @@
 require(RColorBrewer)
 
 makePNG=T
-gitHubDir="~/Desktop/UCB_DS421_NEX_partnerProject"
+gitHubDir=""
 setwd(gitHubDir)
 lon=read.csv("lon.csv",stringsAsFactors=F)
 lat=read.csv("lat.csv",stringsAsFactors=F)
 lonLatGrid=expand.grid(lon[,1],lat[,1])
-
+yourPathToData="/Volumes/Sara_5TB/NEX"
 ## run getBreakPoints.R to get breakpoints
 
 #maxTempBreaks=maxTempHistBreak ## if using getBreakPoints.R
@@ -57,6 +57,7 @@ for(i in 1:nrow(tagList)){
 
 
 which(tagList[,1]=="MIROC-ESM-CHEM") ## 15
+## could choose your own tag of interest
 require(ncdf4)
 require(RSvgDevice)
 
@@ -64,7 +65,7 @@ require(maps)
  
 
 
-yourPathToData="/Volumes/Sara_5TB/NEX" ## no slash needed here
+yourPathToData="" ## no ending slash needed here
 
 
 i=15
