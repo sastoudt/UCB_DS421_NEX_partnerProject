@@ -43,12 +43,23 @@ testData <- testData %>%
 
 #?
 
+
+urlToData=testData %>% drive_link()
 ## need to create some kind of look up table of keys for each grid cell
 ## given lat long or bounding box, give keys to access our processed data
 
-#### grabbing data  ####
+testData %>% gs_key() ## Error: length(x) == 1L is not TRUE
 
-someoneGetData <- testData$id %>%
-  gs_key()
+extract_key_from_url(urlToData) ## "https:"
+
+testData %>% gs_url() ## Error: length(x) == 1L is not TRUE
+
+#### grabbing data  ####
+setwd()
+someoneGetData <- drive_download(testData) 
+
+someoneGetData <- drive_download(testData$id) #Error: 'file' does not identify at least one Drive file.
+
+someoneGetData <- drive_download(urlToData) #Error: 'file' does not identify at least one Drive file.
 
 
